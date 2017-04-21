@@ -1,0 +1,45 @@
+<div class="panel panel-default">
+  <div class="panel-heading"> Result </div>
+  <div class="panel-body">
+    <table class="table table-hover table-condensed">
+        <% if @data[:p].nil? %>
+        <tr><td> <b> p-value</b></td><td> NULL </td></tr>
+      <% else %>
+        <tr><td> <b> p-value</b></td><td> <%= @data[:p] %> </td></tr>
+      <% end %>
+      </table>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><%= raw @data_east[:title] %> </div>
+  <div class="panel-body">
+ 
+    <div style="height:300px;overflow:auto">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <% @data_east[:head].each do |s| %>
+              <th> <%= raw s %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @data_east[:body].each do |dd| %>
+            <tr>
+              <% dd.each do |d| %>
+                <td> <%= raw d %> </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div>
+  <a class="btn btn-mini pull-right" href="<%= raw @data_east[:url_download] %>"> Download Data</a>
+</div>
+
+
+

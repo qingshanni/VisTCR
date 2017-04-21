@@ -1,0 +1,65 @@
+
+<h4> <%= @title %> </h4>
+
+<% if @fig_flag %>
+<button id="savePng" class="btn pull-right">SavePng</button>
+<div id="chart1">
+  <svg style="height:500px">
+  </svg>
+</div>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng').unbind('click').click(function() {
+    var canvas = $('#chart1 svg')[0];
+    saveSvgAsPng(canvas, '<%= @title.gsub(" ","_") %>.png');
+    });  
+</script>
+<% end %>
+
+<br>
+<br>
+<br>
+
+
+<% if @fig_flag %>
+<script>
+    d3.json("<%= raw @url %>", function (dataall) {
+    data = dataall.data;
+    nv.addGraph(function() {
+    var chart = nv.models.lineChart()
+    .margin({left: 100,right:150}) //Adjust chart margins to give the x-axis some breathing room.
+    .x(function(d){return d[0]})
+    .y(function(d){return d[1]})
+    .useInteractiveGuideline(true) //We want nice looking tooltips and a guideline!
+    .transitionDuration(350) //how fast do you want the lines to transition?
+    .showLegend(true) //Show the legend, allowing users to turn on/off line series.
+    .showYAxis(true) //Show the y-axis
+    .showXAxis(true) //Show the x-axis
+    ;
+     
+    chart.xAxis //Chart x-axis settings
+    .axisLabel(dataall.xlabel)
+    .tickFormat(function(d){return dataall.xaxislabel[d]})
+    ;     
+    chart.yAxis //Chart y-axis settings
+    .axisLabel(dataall.ylabel)
+    ;
+     
+    /* Done setting the chart up? Time to render it!*/
+     
+    d3.select('#chart1 svg') //Select the <svg> element you want to render the chart in.
+    .datum(data) //Populate the <svg> element with chart data...
+    .call(chart); //Finally, render the chart!
+     
+    //Update the chart when window resizes.
+    nv.utils.windowResize(function() { chart.update() });
+    return chart;
+    });
+    });
+ 
+
+
+
+</script>
+<% end %>
+

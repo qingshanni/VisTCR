@@ -1,0 +1,20 @@
+<div class="textbox">
+  <div class="textbox-title">
+    <div>Samples </div>
+  </div>
+   <table class="table table-bordered">
+     <tr> <td style="width:60px">Group 1 </td><td>
+      <% @pair_names[:names1].each do |s| %>
+         <%= s %>;  
+      <% end %>
+       </td> 
+     </tr>
+     <tr> <td style="width:60px">Group 2 </td><td>
+      <% @pair_names[:names2].each do |s| %>
+         <%= s %>;  
+      <% end %>
+       </td> 
+     </tr>
+ 
+   </table>
+ </div>

@@ -1,0 +1,42 @@
+<%= form_tag({:controller => "/experiments", :action => "set_experiment_params"}, :method => "post",:remote=> true)   do %>
+     <h4>Adjust Data</h4>
+      <table>
+        <tr><td style="width:300px" valign="top">
+            <%= label_tag  :dt_center, "Center detectors" %>
+            <%= select_tag :dt_center, options_for_select([["Arithmetic Mean",1],["Median",2],["None",3]],3)  %>
+            <%= label_tag  :dt_norm, "Normalize detectors" %>
+            <%= check_box_tag :dt_norm%>
+         </td>
+          <td>
+            <%= label_tag  :sp_center, "Center samples" %>
+            <%= select_tag :sp_center, options_for_select([["Arithmetic Mean",1],["Median",2],["None",3]],3)  %>
+            <%= label_tag  :sp_norm, "Normalize samples" %>
+            <%= check_box_tag :sp_norm%>
+          </td>
+        </tr>
+     </table>
+      <hr />
+     <h4>Hierchical Cluster<h4>
+      <table>
+        <tr><td style="width:300px" valign="top">
+            <%= label_tag  :dt_sim, "Detectors: Similarity Metric" %>
+            <%= select_tag :dt_sim, options_for_select([["Euclidean distance",1],["Manhattan distance",2],["Pearson correlation",3],["spearman correlation",4],["kendall correlation",5]],1)  %>
+            <%= label_tag  :dt_cluster, "Detectors: Cluster method" %>
+            <%= select_tag :dt_cluster, options_for_select([["ward",1],["single",2],["complete",3],["average",4],["mcquitty",5],["median",6],["centroid",7]],3)  %>
+          </td>
+          <td>
+            <%= label_tag  :sp_sim, "Samples: Similarity Metric" %>
+            <%= select_tag :sp_sim, options_for_select([["Euclidean distance",1],["Manhattan distance",2],["Pearson correlation",3],["spearman correlation",4],["kendall correlation",5]],1)  %>
+            <%= label_tag  :sp_cluster, "Samples: Cluster method" %>
+            <%= select_tag :sp_cluster, options_for_select([["ward",1],["single",2],["complete",3],["average",4],["mcquitty",5],["median",6],["centroid",7]],3)  %>
+
+          </td>
+        </tr>
+     </table>
+
+  <%= hidden_field_tag :id,@experiment.id %>
+  <div class="form-actions"  style= "display:none;">
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>
+

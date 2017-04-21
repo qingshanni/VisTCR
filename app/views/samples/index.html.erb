@@ -1,0 +1,233 @@
+
+<div style="height:25px"></div>
+<table id='grid_sample'> </table>
+<div   id='grid_sample_pager'>  </div>
+<br />
+<br />
+<div   id='display_details'>  </div>
+
+
+<script type="text/javascript" language="javascript" charset="utf-8">
+  $(function() {
+      $('#nav_data').addClass("active");
+      var w_width  =$(window).width();
+      var w_height =$(window).height();
+      var grid_sample = $('#grid_sample');
+
+      grid_sample.jqGrid({ 
+        datatype: "json", 
+	height: w_height-500,
+        width:  w_width-90,
+        url:'/samples/jqgrid_sample_list.json', 
+        datatype: "json", 
+        colNames:['ID','Title','Tag', 'Created'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:50}, 
+                  {name:'title',index:'title'}, 
+                  {name:'tag',index:'tag'}, 
+                  {name:'created_at',index:'created_at', width:100}, 
+                 ], 
+       rowNum:20, 
+       rowList:[10,20,30], 
+       pager: '#grid_sample_pager',
+       sortname: 'created_at', 
+       sortorder: "asc", 
+       rownumbers: true,
+       onSelectRow: function(ids) { 
+           $.ajax({
+             url: "/samples/" + ids,
+             async: false,
+             type: "get",
+            success: function(msg){  
+            $('#display_details').html( msg );}
+           });
+              },
+       loadComplete: function(data,xhr){
+             
+              },
+       caption:"Samples" 
+       }); 
+  grid_sample.jqGrid('filterToolbar');     
+  grid_sample.jqGrid('navGrid','#grid_sample_pager',{edit:false,add:false,del:false,search:false})
+                       .navButtonAdd('#grid_sample_pager',{
+                                      caption: "",
+                                      buttonicon:"ui-icon-trash",
+                                      title: "Delete",
+                                      onClickButton: function(){del_iterm();},
+                                      position:"first"})
+                       .navButtonAdd('#grid_sample_pager',{
+                                      caption: "",
+                                      buttonicon:"ui-icon-pencil",
+                                      title: "Edit",
+                                      onClickButton: function(){edit_iterm();},
+                                      position:"first"})
+                      .navButtonAdd('#grid_sample_pager',{
+                                      caption: "",
+                                      buttonicon:"ui-icon-plus",
+                                      title: "Add",
+                                      onClickButton: function(){add_iterm();},
+                                      position:"first"});
+  });
+
+
+function add_iterm(){
+  $.ajax({
+     url: "/samples/new",
+     async: false,
+     type: "get",
+    success: function(msg){  
+    $('body').append("<div id='dialog_modal'>" + msg +' </div>')}
+   });
+
+$( "#dialog_modal" ).dialog({
+  autoOpen: true,
+  height: 600,
+  width: 750,
+  modal: true,
+  title: "Upload samples", 
+  close: function( event, ui ) {
+             $( this ).dialog( "destroy");
+             $( this ).remove();
+  },
+  buttons: {
+    "Upload": function() {
+      var name = $( "#sample_title" );
+      var tag  = $( "#sample_tag" );
+      var tips = $( ".validateTips" ); 
+      var allFields = $( [] ).add( name ).add(tag); 
+      var bValid = true;
+      allFields.removeClass( "ui-state-error" );
+      bValid = bValid && checkEmpty( name, "Sample title", 1 ,tips);
+      bValid = bValid && checkEmpty( tag, "Sample Tag", 1 ,tips);
+      if ( bValid ) {
+          wait_start("Upload file, This will take some time, Please waiting ...");
+          $("#submit_create").trigger("click");
+          $( this ).dialog( "destroy");
+          $( this ).remove();
+        };
+      },
+    Cancel: function() {
+              $( this ).dialog( "destroy");
+              $( this ).remove();
+           }}
+    });
+}
+
+
+
+function edit_iterm(){
+  var gr = $('#grid_sample').getGridParam("selrow");
+  if( gr != null ){ }else{
+    alert('Please select a sample firstly!')
+    return ;
+  }
+
+  $.ajax({
+     url: "/samples/"+ gr + "/edit",
+     async: false,
+     type: "get",
+    success: function(msg){  
+    $('body').append("<div id='dialog_modal'>" + msg +' </div>')}
+   });
+
+$( "#dialog_modal" ).dialog({
+  autoOpen: true,
+  height: 600,
+  width: 750,
+  modal: true,
+  title: "Edit samples", 
+  close: function( event, ui ) {
+             $( this ).dialog( "destroy");
+             $( this ).remove();
+  },
+  buttons: {
+    "OK": function() {
+      var name = $( "#sample_title" );
+      var tag  = $( "#sample_tag" );
+      var tips = $( ".validateTips" ); 
+      var allFields = $( [] ).add( name ).add(tag); 
+      var bValid = true;
+      allFields.removeClass( "ui-state-error" );
+      bValid = bValid && checkEmpty( name, "Sample title", 1 ,tips);
+      bValid = bValid && checkEmpty( tag, "Sample Tag", 1 ,tips);
+      if ( bValid ) {
+          $("#submit_create").trigger("click");
+          $( this ).dialog( "destroy");
+          $( this ).remove();
+        };
+      },
+    Cancel: function() {
+              $( this ).dialog( "destroy");
+              $( this ).remove();
+           }}
+    });
+
+ 
+}
+
+function del_iterm(){
+  var gr = $('#grid_sample').getGridParam("selrow");
+  if( gr != null ){
+    if(confirm('Are you sure to delete the selected sample?')){
+      $.ajax({
+        url: "/samples/delete_recorder.text?id="+ gr ,
+        async: false,
+        type: "get",
+        success: function(msg){  
+                $('#grid_sample').jqGrid().trigger('reloadGrid'); 
+                alert(msg);
+                $('#display_details').empty();
+        }
+      });
+      }
+  } else {
+    alert("Please select experiment firstly");
+  }
+
+
+}
+
+
+function wait_start(msg){
+
+            $.blockUI({ css: { 
+                      border: 'none', 
+                      padding: '30px', 
+                      'font-size': '20px',
+                      backgroundColor: '#000', 
+                      '-webkit-border-radius': '10px', 
+                      '-moz-border-radius': '10px', 
+                      opacity: .5, 
+                      color: '#fff', 
+                      }, 
+                     message: msg, 
+                      });
+ 
+}
+
+
+
+
+// functions for edit dialog 
+function updateTips(tips,t) {
+  tips
+    .text( t )
+    .addClass( "ui-state-highlight" );
+  setTimeout(function() {tips.removeClass( "ui-state-highlight", 1500 );
+      }, 500 );
+}
+
+function checkEmpty( o, n, min,tips ) {
+  if (  o.val().length < min ) {
+    o.addClass( "ui-state-error" );
+    updateTips(tips, "Length of " + n + " must be larger than " +
+        min + "." );
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+</script>
+

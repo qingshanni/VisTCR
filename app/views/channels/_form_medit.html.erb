@@ -1,0 +1,31 @@
+
+<%= simple_form_for(@channel, :url => {:controller => "/channels", :action => "mupdate"}, :html => { :multipart => true }, :remote => true,:method=>"post") do |f| %>
+  <% if @ids.size > 1 %>
+  <div class="well well-small" style="font-size:12px">
+    <p  class="text-warning">Leave blank to unchange the corresponding property.</p>
+  </div>
+  <% end %>
+
+  <div class="form-inputs">
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="control-group string optional channel_sample">
+        <label for="channel_sample" class="string optional control-label">Position</label>
+        <div class="controls">
+          <%= f.text_field :position, :value => @pos, :disabled => true %>
+        </div>
+      </div>
+      <%= f.input :sample ,:label => 'Sample' ,:collection =>@sample_name %>
+    </div>
+    <div class="span6">
+      <%= f.input :task ,:label => 'Task',:collection => [["Target","target"],["Endogenous Control","endogenous control"]] %>
+      <%= f.input :confidence ,:label => 'Confidence' ,:collection => [["0",0],["1",1],["2",2],["3",3]]%>
+      <%= hidden_field_tag :position,  @ids %>
+    </div>
+  </div>
+</div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= f.button :submit,:id => "submit_create" %>
+  </div>
+<% end %>

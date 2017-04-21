@@ -1,0 +1,8 @@
+show_detector_details(<%= @channel.id %>);
+
+var dtchannel ={"v":<%= @channel.ct_value %>,"id":<%= @channel.id %>,"confidence":<%= @channel.confidence  %>}; 
+var circle = d3.select("#chl<%= @channel.id%>")
+               .style("fill", function(d) { if(dtchannel.confidence == 0) { return "rgb(0,0,0)";}else{return "rgb(255,0,0)";}  } );
+
+
+

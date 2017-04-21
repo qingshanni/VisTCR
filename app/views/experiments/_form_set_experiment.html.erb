@@ -1,0 +1,42 @@
+<%= form_tag({:controller => "/experiments", :action => "set_experiment_params"}, :method => "post",:remote=> true)   do %>
+
+  <div class="form-inputs">
+    <h4>MiTCR params</h4></h>
+    <table>
+      <tr><td style="width:300px" valign="top">
+          <%= label_tag  :mitcr_pset, "Params set" %>
+          <%= select_tag :mitcr_pset, options_for_select([["flex","flex"],["jprimer","jprimer"]], @experiment.mitcr_pset)  %>
+
+          <%= label_tag  :mitcr_species, "Target species" %>
+          <%= select_tag :mitcr_species, options_for_select([["Homo sapiens","hs"],["Mus musculus","mm"]],@experiment.mitcr_species)  %>
+
+          <%= label_tag  :mitcr_gene, "Target genes" %>
+          <%= select_tag :mitcr_gene, options_for_select([["Beta chain of TCR","TRB"],["Alpha chain of TCR","TRA"]],@experiment.mitcr_gene)  %>
+
+          <%= label_tag  :mitcr_cysphe, "CDR3 definition" %>
+          <%= select_tag :mitcr_cysphe, options_for_select([["Do not include cys & phe","0"],["include cys & phe","1"]],@experiment.mitcr_cysphe)  %>
+
+        </td><td>
+        
+      
+          <%= label_tag  :mitcr_ec, "Error correction level" %>
+          <%= select_tag :mitcr_ec, options_for_select([["Don't correct errors","0"],["Correct low quality sequencing errors only","1"],["Correct all","2"]],@experiment.mitcr_ec)  %>
+
+          <%= label_tag  :mitcr_quality, "Quality threshold" %>
+          <%= text_field_tag :mitcr_quality,  @experiment.mitcr_quality%>
+
+          <%= label_tag  :mitcr_lq, "Low quality CDR3s processing strategy" %>
+          <%= select_tag :mitcr_lq, options_for_select([["Filter off reads","drop"],["Map reads","map"]],@experiment.mitcr_lq)  %>
+
+          <%= label_tag  :mitcr_pcrec, "The PCR and high quality sequencing errors correction algorithm" %>
+          <%= select_tag :mitcr_pcrec, options_for_select([["Save my diversity","smd"],["Eliminate these errors","ete"]],@experiment.mitcr_pcrec)  %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <%= hidden_field_tag :id,@experiment.id %>
+  <div class="form-actions"  style= "display:none;">
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>

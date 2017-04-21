@@ -1,0 +1,164 @@
+
+<style>
+  .background {
+    fill: #ccc;
+  }
+  text.active {
+    fill: red;
+  }
+</style>
+<div id = "chart_1"  > </div>
+<script  type="text/javascript" >
+
+
+
+ d3.json("<%= display_Board_data_json_sub_experiment_path(sub_experiment) %>.json", function(data) {
+  var matrix     = data.channels, 
+      type       = data.type;
+  var nrow,ncol;  
+  var AZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var flag_click      = 0;
+ 
+
+      if(type != data.channels.length){
+         alert('Board data error!');
+         return ;
+       }
+
+      if (type == 384){
+           nrow = 16;
+           ncol = 24;
+      } 
+      else if (type == 96){
+           nrow = 8;
+           ncol = 12;
+      } 
+      else {
+         alert("Board type error! 96 or 384");
+         return ;
+     }
+      var margin = {top: 100, right: 100, bottom: 100, left: 120},
+          width = 500,
+          height = width *2 /3,
+          d1    = width / ncol *2,
+          d2    = height /nrow;
+
+      var   xscale = d3.scale.ordinal().domain(d3.range(ncol)).rangeBands([0, width]);
+      var   yscale = d3.scale.ordinal().domain(d3.range(nrow)).rangeBands([0, height]); 
+//      var   color = d3.scale.quantize().domain([0,100]).range(["black","red"]);
+      var   color = d3.scale.linear().domain([0,60]).range(["yellow","red"]);
+
+     for (var i=0; i< nrow; i++){
+       for (var j=0; j<ncol; j++ ){
+               var idx = i*ncol+j;
+               matrix[idx].x =  xscale(j)+xscale.rangeBand()/2;
+               matrix[idx].y =  yscale(i)+yscale.rangeBand()/2;
+             };
+           }; 
+
+      var svg = d3.select("#chart_1").append("svg")
+               .attr("width", margin.left + margin.right + width)
+               .attr("height", height + margin.top + margin.bottom)
+               .append("g")
+               .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+               .on('click',mouseclick);
+
+  svg.append("path")
+      .attr("class", "background")
+      .attr("d", "M" + (-d1) + " " + (-d2) + " L"+ (-d1)+ " " + (height + d2) + " L" + width + " " + (height + d2) +  " L" + (width + d1*2/3) + " " + (height+d2-d1/2) + " L" + (width + d1*2/3) + " " + (-d2+d1/2) +   " L" + width  + " " + (-d2));
+    
+
+  var row = svg.selectAll(".row")
+      .data(d3.range(nrow))
+    .enter().append("g")
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + yscale(i) + ")"; })
+
+  row.append("text")
+      .attr("x", -10)
+      .attr("y", yscale.rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "end")
+      .text(function(d, i) { return AZ.charAt(i); })
+ 
+  var col = svg.selectAll(".column")
+      .data(d3.range(ncol))
+    .enter().append("g")
+      .attr("class", "column")
+      .attr("transform", function(d, i) { return "translate(" + xscale(i) + ", 0)"; })
+
+  col.append("text")
+      .attr("x", xscale.rangeBand()/5 )
+      .attr("y", -10 )
+      .attr("dy", ".32em")
+      .attr("text-anchor", "center")
+      .text(function(d, i) { return (i+1) + ""; })
+ 
+  var g = svg.selectAll("circle")
+      .data(matrix)
+      .enter()
+      .append("circle")
+        .attr("class", "cell")
+        .attr("cx", function(d) { return d.x;})
+        .attr("cy", function(d) { return d.y;})
+        .attr("r", xscale.rangeBand()/2.5 )
+        .attr("title",function(d){return "Position:  " + d.position +"\nSample:        " + d.sample+"\nDetector:  "+d.detector+"\nCT value: "+d.ct_value+"\nTask: "+d.task;})
+        .style("stroke", function(d) { return d.task == 'target'? "green": (d.task == null? "gray":"blue") ;})
+        .style("stroke-width", function(d) { return 4;})
+        .style("fill", function(d) { return d.ct_value >0 ? color(d.ct_value):"grey";})
+        .on("mouseover", cellmouseover)
+        .on("mouseout", cellmouseout)
+        .on("click", cellclick);
+
+  function cellclick(p) {
+    flag_click = 1;
+    if(p.sample){
+        add_channel_selected(p);
+    }
+
+  }
+
+
+
+  function refresh_channel_detail(){
+
+  }
+
+
+  function mouseclick(){
+    if (flag_click == 0){
+        $('#chart_2').html("No channel selected");
+        $('#selected_channels').val(' ');
+    }
+    else{
+       flag_click = 0; 
+    }
+
+  
+  }
+
+ 
+  function cellmouseover(p) {
+   
+  }
+
+  function cellmouseout() {
+  }
+
+  function unique(mx){
+    var u = {}, a = [];
+    for(var i = 0, l = mx.length; i < l; ++i) {
+        if(u.hasOwnProperty(mx[i])) {
+           continue;
+        }
+        a.push(mx[i]);
+        u[mx[i]] = 1;
+    }
+    return a;
+  }
+
+});
+
+</script>
+</body>
+

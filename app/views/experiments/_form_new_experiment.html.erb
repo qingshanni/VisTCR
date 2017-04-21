@@ -1,0 +1,548 @@
+
+<%  if false %>
+<script type="text/javascript">
+  $(function(){
+       $("#set_par").hide();     
+       $("#set_parameter").change(function(){
+        if( $("#set_parameter").prop('checked')){
+           $("#set_par").show();     
+        }else{
+           $("#set_par").hide();     
+        }
+      })
+  });
+</script>
+
+<%= simple_form_for(@experiment,:remote => true) do |f| %>
+<p class="validateTips">All form fields are required.</p>
+<div class="form-inputs">
+  <%= f.input :title, :class => "text ui-widget-content ui-corner-all" , :input_html => { :style=>"width: 98%; "}%>
+  <%= f.input :description, :class => "text ui-widget-content ui-corner-all",  :input_html => { :style=>"width: 98%; height: 100px;"}%>
+  <%= label_tag(:design_file, "Upload design file") %>
+  <%= file_field_tag "design_file" %>
+  <br/>
+  <br/>
+  <%= check_box_tag(:set_parameter) %> Set parameters
+  <br/>
+  <br/>
+  <div class="form-inputs" id="set_par">
+    <table>
+      <tr><td style="width:300px" valign="top">
+          <label for="v_cutoff">V segment cutoff </label>
+          <input id="v_cutoff" type="text" name="v_cutoff" class="input-mini" value=0.1>
+          <label for="v_max_align_len"> Max length of V alignment </label>
+          <input id="v_max_align_len" type="text" name="v_max_align_len" class="input-mini" value=50>
+          <label for="v_min_align_len"> Min length of V alignment </label>
+          <input id="v_min_align_len" type="text" name="v_min_align_len" class="input-mini" value=10>
+        </td><td>
+          <label for="j_cutoff">J segment cutoff </label>
+          <input id="j_cutoff" type="text" name="j_cutoff" class="input-mini" value=0.1>
+          <label for="j_max_align_len"> Max length of J alignment </label>
+          <input id="j_max_align_len" type="text" name="j_max_align_len" class="input-mini" value=50>
+          <label for="j_min_align_len"> Min length of J alignment </label>
+          <input id="j_min_align_len" type="text" name="j_min_align_len" class="input-mini" value=10>
+  
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="form-actions"  style= "display:none;">
+  <%= f.button :submit, :id => "submit_create" %>
+</div>
+<% end %>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+      $("#step_2").hide();
+      $("#step_3").hide();
+
+      $("#set_mitcr_par").show();
+      $("#set_cdr3_par").hide();
+      $("#set_mixcr_par").hide();
+      $("#set_dcnt_par").hide();
+      $("#extract_method").change(function(){
+             $("#set_mitcr_par").hide();
+             $("#set_cdr3_par").hide();
+             $("#set_mixcr_par").hide();
+             $("#set_dcnt_par").hide();
+        if($("#extract_method").val()=='cdr3'){
+             $("#set_cdr3_par").show();
+          }
+         if($("#extract_method").val()=='mitcr'){
+             $("#set_mitcr_par").show();
+          }
+          if($("#extract_method").val()=='mixcr'){
+             $("#set_mixcr_par").show();
+          }
+          if($("#extract_method").val()=='dcnt'){
+             $("#set_dcnt_par").show();
+          }
+
+
+        })
+      });
+
+</script>
+
+<%= simple_form_for(@experiment,:remote => true) do |f| %>
+  <p class="validateTips">All form fields are required.</p>
+<div class="form-inputs">
+  <div id="step_1">
+    <%= f.input :title, :class => "text ui-widget-content ui-corner-all" , :input_html => { :style=>"width: 98%; "}%>
+    <%= f.input :description, :class => "text ui-widget-content ui-corner-all",  :input_html => { :style=>"width: 98%; height: 100px;"}%>
+  </div>
+
+  <div id="step_2">
+    <%= label_tag  :extract_method, "Colones extract method" %>
+    <%= select_tag :extract_method, options_for_select([["MiTCR","mitcr"],["MiXCR","mixcr"],["Decombinator","dcnt"]], "mitcr"),  :style=>"width: 98%; " %>
+
+    <div class="form-inputs" id="set_cdr3_par">
+      <table>
+        <tr><td style="width:300px" valign="top">
+            <%= label_tag  :cdr3_species, "Target species" %>
+            <%= select_tag :cdr3_species, options_for_select([["Homo sapiens","hs"],["Mus musculus","mm"]],"hs")  %>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="form-inputs" id="set_mitcr_par">
+      <table>
+        <tr><td style="width:300px" valign="top">
+            <%= label_tag  :mitcr_species, "Target species" %>
+            <%= select_tag :mitcr_species, options_for_select([["Homo sapiens","hs"],["Mus musculus","mm"]],"hs")  %>
+
+            <label for="mitcr_pset">Params set &nbsp;<span title="Pre-defined parameter sets:
+      flex-Alignment of V and J segments starts from 5-mer surrounding the conserved amino acid (cysteine and phenylalanine respectively). Then alignments are expanded in both directions, i.e. inside and outside of CDR3.
+      jprimer - Begins alignments of V and J segments starting from 5-mer around the conserved amino acid (cysteine and phenylalanine respectively). Then the alignment for V is expanded in both (inside CDR3 and outside CDR3) directions and the alignment for J is expanded only inside CDR3." ><i class="icon-question-sign"></i></span></label>
+            <%= select_tag :mitcr_pset, options_for_select([["flex","flex"],["jprimer","jprimer"]], "flex")  %>
+
+            <label for="mitcr_ec">Error correction level </label>
+            <%= select_tag :mitcr_ec, options_for_select([["Don't correct errors","0"],["Correct low quality sequencing errors only","1"],["Correct all","2"]],"1")  %>
+
+            <label for="mitcr_cysphe">CDR3 definition &nbsp;<span title="Determines whether to include bounding cysteine and phenylalanine into CDR3." ><i class="icon-question-sign"></i></span></label>
+            <%= select_tag :mitcr_cysphe, options_for_select([["Do not include cys & phe","0"],["include cys & phe","1"]],"1")  %>
+
+          </td><td>
+            <%= label_tag  :mitcr_gene, "Target genes" %>
+            <%= select_tag :mitcr_gene, options_for_select([["Beta chain of TCR","TRB"]],"TCRB")  %>
+
+            <label for="mitcr_quality">Quality threshold &nbsp;<span title="The quality threshold value for segment alignment and low quality sequences correction algorithms.(PHRED quality value,0 tells the program not to use quality information)" ><i class="icon-question-sign"></i></span></label>
+            <%= text_field_tag :mitcr_quality,  20 %>
+
+            <label for="mitcr_lq">Low quality CDR3s processing strategy &nbsp;<span title="Low quality CDR3s processing strategy:
+     Drop: filter off reads that contain low quality (PHRED quality value less than 25 by default or as specified by Quality threshold parameter) nucleotides within CDR3
+     Map:  map reads that contain low quality (PHRED quality value less than 25 used by default or as specified by Quality threshold parameter) nucleotides within CDR3 onto clonotypes created from the high quality CDR3s" ><i class="icon-question-sign"></i></span></label>
+            <%= select_tag :mitcr_lq, options_for_select([["Drop","drop"],["Map","map"]],"map")  %>
+
+            <label for="mitcr_pcrec">Errors correction algorithm &nbsp;<span title="The PCR and high quality sequencing errors correction algorithm
+     Save my diversity: corrects PCR errors and high quality sequencing errors in germline regions only (corrects 65-85% of all errors with minimal risk to lose real TCR diversity)
+     Eliminate these error: maximal correction of errors (each sinlge mismatch within CDR3 is considered as possible error) with a risk of losing a minor portion of real TCR diversity" ><i class="icon-question-sign"></i></span></label>
+            <%= select_tag :mitcr_pcrec, options_for_select([["Save my diversity","smd"],["Eliminate these errors","ete"]],"smd")  %>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+    <div class="form-inputs" id="set_mixcr_par">
+      <table>
+        <tr><td style="width:300px" valign="top">
+
+            <%= label_tag  :mixcr_species, "Target species" %>
+            <%= select_tag :mixcr_species, options_for_select([["Homo sapiens","hsa"],["Mus musculus","mmu"]],"hsa")  %>
+
+          </td> <td>
+
+            <%= label_tag  :mixcr_gene, "Target genes" %>
+            <%= select_tag :mixcr_gene, options_for_select([["Beta chain of TCR","TRB"]],"TCRB")  %>
+
+          </td>
+        </tr>
+      </table>
+      <script type="text/javascript" language="javascript" charset="utf-8">
+          function expend_detail(id1,id2){
+         if(id2.css('display')=="none"){
+            id2.css({'display':'block'});
+            id1.removeClass("icon-plus-sign");
+            id1.addClass("icon-minus-sign");
+            }else{
+            id2.css({'display':'none'});
+            id1.removeClass("icon-minus-sign");
+            id1.addClass("icon-plus-sign");
+            }
+          }
+        
+          function open_close(id1,id2){
+         if(id2.css('display')=="none"){
+            id2.css({'display':'block'});
+            id1.removeClass("icon-plus");
+            id1.addClass("icon-minus");
+            }else{
+            id2.css({'display':'none'});
+            id1.removeClass("icon-minus");
+            id1.addClass("icon-plus");
+            }
+          }
+      </script>
+      <h5>  Advance parameters</h5>
+      <div style="margin-left:15px">
+        <span id="root_1" style="cursor:pointer;line-height:30px;" onclick=" expend_detail($('#root_1 i'),$('#root1'))"><i  class="icon-plus-sign" style="color:#666666" ></i> Align </span>
+      </div>
+      <div id="root1" style="display:none">
+        <div style="margin-left:25px">
+          <span id="child_1" style="cursor:pointer;line-height:30px;" onclick="open_close($('#child_1 i'),$('#child1'))"><i class="icon-plus" style="color:#666666" ></i> Aligner parameters</span>
+        </div>
+        <div id="child1" style="display:none; margin-left:25px">
+          <table>
+            <tr>
+              <td style="width:400px" >
+                <label for="mixcr_minimal">minSumScore &nbsp;<span title="Minimal total alignment score value of V and J genes." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_minimal,120 %>
+              </td>
+              <td>
+                <label for="mixcr_maximal">maxHits &nbsp;<span title="Maximal number of hits for each gene type: if input sequence align to more than maxHits targets, then only top maxHits hits will be kept." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_maximal,5 %>
+
+              </td>
+            </tr>
+            <tr style="display:none">
+              <td style="width:400px" >
+                <label for="mixcr_relativeMin">relativeMinVFR3CDR3Score (only for paired-end analysis)&nbsp;<span title="Relative minimal alignment score of FR3+VCDR3Part region for V gene." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_relativeMin,0.7%>
+              </td>
+              <td>
+                &nbsp;
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="margin-left:25px" >
+          <span id="child_2" style="cursor:pointer;line-height:30px;" onclick="open_close($('#child_2 i'),$('#child2'))"><i class="icon-plus" style="color:#666666" ></i> V,J and C aligners parameters</span>
+        </div>
+        <div id="child2" style="display:none;margin-left:25px">
+          <table>
+            <tr>
+              <td style="width:300px">
+                <%= label_tag :Description %>
+              </td>
+              <td>
+                <%= label_tag  :mixcr_mapperkV, "V value" %>
+              </td>
+              <td>
+                <%= label_tag  :mixcr_mapperkJ, "J value" %>
+              </td>
+              <td>
+                <%= label_tag  :mixcr_mapperkc, "C value" %>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                mapperKValue 
+                &nbsp;<span title="Length of seeds used in aligner." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_mapperkv, 5, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_mapperkj,5, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_mapperkc,5, :class => "input-small"%>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                floatingLeftBound
+                &nbsp;<span title="Specifies whether left bound of alignment is fixed or float: if floatingLeftBound set to false, the left bound of either target or query will be aligned. Default values are suitable in most cases." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= select_tag :mixcr_leftboundv, options_for_select([["true","true"],["false","false"]],"true"), {:class => "input-small"}  %>
+              </td>
+              <td>
+                <%= select_tag :mixcr_leftboundj, options_for_select([["true","true"],["false","false"]],"true"), {:class => "input-small"}   %>
+              </td>
+              <td>
+                <%= select_tag :mixcr_leftboundc, options_for_select([["true","true"],["false","false"]],"false"), {:class => "input-small"}    %>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                floatingRightBound
+                &nbsp;<span title="Specifies whether right bound of alignment is fixed or float: if floatingRightBound set to false, the right bound of either target or query will be aligned. Default values are suitable in most cases. If your target molecules have no primer sequences in J Region (e.g. library was amplified using primer to the C region) you can change value of this parameter for J gene to false to increase J gene identification accuracy and overall specificity of alignments." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= select_tag :mixcr_rightboundv, options_for_select([["true","true"],["false","false"]],"true"), {:class => "input-small"}  %>
+              </td>
+              <td>
+                <%= select_tag :mixcr_rightboundj, options_for_select([["true","true"],["false","false"]],"true"), {:class => "input-small"}   %>
+              </td>
+              <td>
+                <%= select_tag :mixcr_rightboundc, options_for_select([["true","true"],["false","false"]],"false"), {:class => "input-small"}    %>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                minAlignmentLength
+                &nbsp;<span title="Minimal length of aligned region." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_minalignmentlengthv,15, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_minalignmentlengthj,15, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_minalignmentlengthc,15, :class => "input-small"%>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                maxAdjacentIndels
+                &nbsp;<span title="Maximum number of indels between two seeds." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_maxadjacentindelsv,2, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_maxadjacentindelsj,2, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_maxadjacentindelsc,2, :class => "input-small"%>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                absoluteMinScore
+                &nbsp;<span title="Minimal score of alignment: alignments with smaller score will be dropped." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_absoluteminscorev,40.0, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_absoluteminscorej,40.0, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_absoluteminscorec,40.0, :class => "input-small"%>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                relativeMinScore
+                &nbsp;<span title="Minimal relative score of alignments: if alignment score is smaller than relativeMinScore * maxScore , where maxScore is the best score among all alignments for particular gene type (V, J or C) and input sequence, it will be dropped." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_relativeminscorev,0.87, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_relativeminscorej,0.87, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_relativeminscorec,0.87, :class => "input-small"%>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:300px;font-size:12px;">
+                maxHits
+                &nbsp;<span title="Maximal number of hits: if input sequence align with more than maxHits queries, only top maxHits hits will be kept." ><i class="icon-question-sign"></i></span>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_maxhitsv,7, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_maxhitsj,7, :class => "input-small"%>
+              </td>
+              <td>
+                <%= text_field_tag :mixcr_maxhitsc,7, :class => "input-small"%>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="margin-left:25px">
+          <span id="child_3" style="cursor:pointer;line-height:30px;" onclick="open_close($('#child_3 i'),$('#child3'))"><i class="icon-plus" style="color:#666666" ></i>  D aligner parameters</span>
+        </div>
+        <div id="child3" style="display:none;margin-left:25px">
+          <table width="100%">
+            <tr>
+              <td width="33%">
+                <label for="mixcr_absolutminscore">absoluteMinScore &nbsp;<span title="Minimal score of alignment: alignments with smaller scores will be dropped." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_absolutminscore,30.0, :class => "input-small"%>
+              </td>
+              <td width="33%">
+                <label for="mixcr_relativeminscore">relativeMinScore &nbsp;<span title="Minimal relative score of alignment: if alignment score is smaller than relativeMinScore * maxScore , where maxScore is the best score among all alignments for particular sequence, it will be dropped." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_relativeminscore,0.85, :class => "input-small"%>
+              </td>
+              <td width="33%">
+                <label for="mixcr_relativeminscore">maxHits &nbsp;<span title="Maximal number of hits: if input sequence align with more than maxHits queries, only top maxHits hits will be kept." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_maxhits,3, :class => "input-small"%>
+              </td>
+            </tr>
+            <tr style="display:none">
+              <td  >
+                <%= label_tag  :mixcr_type, "Type of scoring." %>
+                <%= select_tag :mixcr_type, options_for_select([["affine","affine"],["linear","linear"]],"affine"), {:class => "input-small"}    %>
+              </td>
+              <td>
+                <%= label_tag  :mixcr_gapopenpenalty, "Penalty for gap opening." %>
+                <%= text_field_tag :mixcr_gapopenpenalty,-10, :class => "input-small"%>
+              </td>
+              <td>
+                <%= label_tag  :mixcr_gapextensionpenalty, "Penalty for gap extension." %>
+                <%= text_field_tag :mixcr_gapextensionpenalty,-1, :class => "input-small"%>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div style="margin-left:15px">
+        <span id="root_2"style=" cursor:pointer;" onclick=" expend_detail($('#root_2 i'),$('#root2'))"><i  class="icon-plus-sign" style="color:#666666" ></i> Assemble clones </span>
+      </div>
+      <div id="root2" style="display:none">
+        <div style="margin-left:25px" >
+          <span id="child_4" style="cursor:pointer;line-height:30px;" onclick="open_close($('#child_4 i'),$('#child4'))"><i class="icon-plus" style="color:#666666" ></i> Aligner parameters</span>
+        </div>
+        <div id="child4" style="display:none;margin-left:25px">
+          <table width="100%">
+            <tr>
+              <td width="33%">
+                <label for="mixcr_badqualitythreshold">badQualityThreshold &nbsp;<span title="Minimal value of sequencing quality score: nucleotides with lower quality are considered as 'bad'. If sequence contains at least one 'bad' nucleotide, it will be deferred at initial assembling stage, for further processing by mapper." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_badqualitythreshold,20, :class => "input-small"%>
+              </td>
+              <td width="33%">
+                <label for="mixcr_maxbadpointspercent">maxBadPointsPercent &nbsp;<span title="Maximal allowed percent of 'bad' points in sequence: if sequence contains more than maxBadPointsPercent 'bad' nucleotides, it will be dropped." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_maxbadpointspercent,0.7, :class => "input-small"%>
+              </td>
+              <td width="33%">
+                <label for="mixcr_addreadscountonclustering">addReadsCountOnClustering &nbsp;<span title="Aggregate cluster counts when assembling final clones: if addReadsCountOnClustering is true , then all children clone counts will be added to the head clone; thus head clone count will be a total of its initial count and counts of all its children." ><i class="icon-question-sign"></i></span></label>
+                <%= select_tag :mixcr_addreadscountonclustering, options_for_select([["true","true"],["false","false"]],"false"), {:class => "input-small"}    %>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="margin-left:25px"  >
+          <span id="child_5" style="cursor:pointer;line-height:30px;" onclick="open_close($('#child_5 i'),$('#child5'))"><i class="icon-plus" style="color:#666666" ></i> Clustering parameters</span>
+        </div>
+        <div id="child5" style="display:none;margin-left:25px">
+          <table width="100%">
+            <tr>
+              <td width="33%">
+                <label for="mixcr_searchdepth">searchDepth &nbsp;<span title="Maximum number of cluster layers (not including head)." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_searchdepth,2, :class => "input-small"%>
+              </td>
+              <td width="33%">
+                <label for="mixcr_allowedMutationsInNRegions">allowedMutationsInNRegions &nbsp;<span title="Maximum allowed number of mutations in N regions (non-template nucleotides in VD, DJ or VJ junctions): if two fuzzy matched clonal sequences will contain more than allowedMutationsInNRegions mismatches in N-regions, they will not be clustered together (one cannot be a direct child of another)." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_allowedMutationsInNRegions,1, :class => "input-small"%>
+              </td>
+              <td width="33%">
+                <label for="mixcr_searchParameters">searchParameters &nbsp;<span title="Parameters that control fuzzy match criteria between clones in adjacent layers.  By default, twoMismatches allows only one mismatch between two adjacent clones (parent and direct child)." ><i class="icon-question-sign"></i></span></label>
+                <%= select_tag :mixcr_searchParameters, options_for_select([["oneMismatch","oneMismatch"],["oneIndel","oneIndel"],["oneMismatchOrIndel","oneMismatchOrIndel"],["twoMismatches","twoMismatches"],["twoIndels","twoIndels"],["twoMismatchesOrIndels","twoMismatchesOrIndels"],["threeMismatches","threeMismatches"],["threeIndels","threeIndels"],["threeMismatchesOrIndels","threeMismatchesOrIndels"],["fourMismatches","fourMismatches"],["fourIndels","fourIndels"],["fourMismatchesOrIndels","fourMismatchesOrIndels"],],"twoMismatches"), {:class => "input-medium"}    %>
+              </td>
+            </tr>
+            <tr>
+              <td colspan=2>
+                <label for="mixcr_clusteringFilter">clusteringFilter.specificMutationProbability &nbsp;<span title="Probability of a single nucleotide mutation in clonal sequence which has non-hypermutation origin (i.e. PCR or sequencing error). This parameter controls relative counts between two clones in adjacent layers: a smaller clone can be attached to a larger one if its count smaller than count of parent multiplied by (clonalSequenceLength * specificMutationProbability) ^ numberOfMutations ." ><i class="icon-question-sign"></i></span></label>
+                <%= text_field_tag :mixcr_clusteringFilter,1E-3, :class => "input-small"%>
+              </td>
+              <td>
+                &nbsp;
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="display:none">
+          <div style="margin-left:25px" >
+            <span id="child_6" style="cursor:pointer;line-height:30px;" onclick="open_close($('#child_6 i'),$('#child6'))"><i class="icon-plus" style="color:#666666" ></i> Clustering parameters</span>
+          </div>
+          <div id="child6" style="display:none;margin-left:25px">
+            <table>
+              <tr>
+                <td style="width:300px">
+                  <%= label_tag :Description %>
+                </td>
+                <td>
+                  <%= label_tag  :mixcr_mapperkV, "V value" %>
+                </td>
+                <td>
+                  <%= label_tag  :mixcr_mapperkJ, "J value" %>
+                </td>
+                <td>
+                  <%= label_tag  :mixcr_mapperkc, "C value" %>
+                </td>
+              </tr>
+              <tr>
+                <td style="width:300px">
+                  Gene region used to build alignments
+                </td>
+                <td>
+                  <%= text_field_tag :mixcr_featureToAlignV, "VTranscript", :class => "input-small"%>
+                </td>
+                <td>
+                  <%= text_field_tag :mixcr_featureToAlignJ,"JRegion", :class => "input-small"%>
+                </td>
+                <td>
+                  <%= text_field_tag :mixcr_featureToAlignC,"CExon1", :class => "input-small"%>
+                </td>
+              </tr>
+              <tr>
+                <td style="width:300px">
+                  Relative minimal score of hit 
+                </td>
+                <td>
+                  <%= text_field_tag :mixcr_relativeMinScoreV,0.8, :class => "input-small"%>
+                </td>
+                <td>
+                  <%= text_field_tag :mixcr_relativeMinScoreJ,0.8, :class => "input-small"%>
+                </td>
+                <td>
+                  <%= text_field_tag :mixcr_relativeMinScoreC,0.8, :class => "input-small"%>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-inputs" id="set_dcnt_par">
+      <table>
+        <tr><td style="width:300px" valign="top">
+
+            <%= label_tag  :dcnt_species, "Target species" %>
+            <%= select_tag :dcnt_species, options_for_select([["Homo sapiens","human"],["Mus musculus","mouse"]],"human")  %>
+
+          </td> <td>
+
+            <%= label_tag  :dcnt_gene, "Target genes" %>
+            <%= select_tag :dcnt_gene, options_for_select([["Beta chain of TCR","TRB"]],"TCRB")  %>
+
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+ <div id= "step_3">
+    <div class="control-group string optional sub_experiment_description">
+      <label class="string optional control-label" for="sub_experiment_file">Experiment design file</label>
+      <div class="controls">
+        <%= file_field_tag "design_file" %>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="form-actions"  style= "display:none;">
+  <%= f.button :submit, :id => "submit_create" %>
+</div>
+<% end %>
+<input id="create_exp_step" type="hidden" value="1">
+
+
+
+

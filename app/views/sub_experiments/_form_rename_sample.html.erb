@@ -1,0 +1,26 @@
+<%= form_tag({:controller => "/sub_experiments", :action => @action}, :html => { :multipart => true},:method => "post",:remote=> true)   do %>
+
+  <div class="form-inputs">
+    <%= label_tag  :name_org, "Original sample name" %>
+    <input type="text" value="<%= @sub_experiment.sample_name_org %>" style="width: 98%; " size="50" name="name_org"  class="string optional" >
+    <%= label_tag  :name, "Sample name redefined as" %>
+    <input type="text" value="<%= @sub_experiment.sample_name %>" style="width: 98%; " size="50" name="name"  class="string optional">
+    <%= label_tag  :sample_id, "Sample file" %>
+    <%= select_tag :sample_id, options_for_select(@samples,@sub_experiment.sample_id)  %>
+
+
+    <%= hidden_field_tag :id,@sub_experiment.id %>
+    <%= hidden_field_tag :exp_id,@experiment.id %>
+
+    <% @factor_name.each_with_index do |s,i|  %>
+      <%= label_tag   @factor[i], @factor_name[i] %>
+      <%= select_tag  @factor[i], options_for_select(@factor_type[i],@factor_sel[i])  %>
+    <% end%>
+
+  </div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>
+

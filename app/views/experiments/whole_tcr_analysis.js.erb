@@ -1,0 +1,10 @@
+<% if @err %>
+  $("#east").html("<%= j render :partial=> @east_content %>");
+  $("#center_display").html( "<%= j render :partial=> @center_content2 %>");
+  alert("<%= raw @str_err %>");
+<% else %>
+  $("#east").html("<%= j render :partial=> @east_content %>");
+  $("#center_display").html( "<%= j render :partial=> @center_content %>"  +  "<%= j render :partial=> @center_content2 %>");
+<% end%>  
+
+$.unblockUI(); 

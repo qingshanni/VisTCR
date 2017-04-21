@@ -1,0 +1,17 @@
+<br>
+<br>
+<br>
+<br>
+
+<div class="panel panel-default" style="width: 300px " >
+  <div class="panel-heading">Log in</div>
+  <div class="panel-body" style="padding-left:30px">
+    <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => 'form-vertical' }) do |f| %>
+      <%= f.input :email,:placeholder=> 'Enter email' ,:autofocus => true %>
+      <%= f.input :password,:placeholder=> 'Enter password' %>
+      <%= f.input :remember_me, :as => :boolean if devise_mapping.rememberable? %>
+      <%= f.button :submit, "Log in", :class => 'btn-primary' %>
+    <% end %>
+    <%=  render "devise/shared/links" %>
+  </div>
+</div>

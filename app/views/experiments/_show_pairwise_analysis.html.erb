@@ -1,0 +1,40 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading"> Result </div>
+  <div class="panel-body">
+    <table class="table table-hover table-condensed">
+        <tr><td> <b> Test method</b></td><td> <%= @data[:t_method] %> </td></tr>
+        <tr><td> <b> Paired </b></td><td> <%= @data[:paired] %> </td></tr>
+        <tr><td> <b> p-value</b></td><td> <%= "NULL" if @data[:p].nil? %> <%= @data[:p] %></td></tr>
+      </table>
+  </div>
+</div>
+
+
+<% @data[:desc].each_with_index do |dd,i| %>
+<div class="panel panel-default">
+  <div class="panel-heading">Group <%= i+1 %> </div>
+  <div class="panel-body">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+              <% @data[:head].each do |t| %>
+                <td> <%= t %> </td>
+              <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% dd.each do |d| %>
+            <tr>
+              <% d.each do |t| %>
+                <td> <%= t %> </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% end %>
+

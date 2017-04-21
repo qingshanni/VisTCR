@@ -1,0 +1,25 @@
+
+<script type="text/javascript">
+  $(function(){
+      $("#factor_selected_ids").multiselect();
+      });
+</script>
+
+
+<%= form_tag({:controller => "/experiments", :action => "whole_tcr_analysis"}, :method => "post",:remote=> true)   do %>
+
+  <div class="form-inputs">
+     <%= label_tag  :s_type, "Select type" %>
+     <%= select_tag :s_type, options_for_select(@s_type[:collect], @s_type[:selected]),:style=>"width:90%;" %>
+     <br />
+    <%= label_tag  :factor_ids, "Select factors to combine samples(leave blank to not combine)" %>
+    <%= select_tag :factor_ids, options_for_select(@factor_collection),{:multiple=>true, :id=>"factor_selected_ids", :style=>"width: 580px;height:195px"}  %>
+ 
+ </div>
+
+  <%= hidden_field_tag :id,@experiment.id %>
+  <%= hidden_field_tag :task,@task %>
+  <div class="form-actions"  style= "display:none;">
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>

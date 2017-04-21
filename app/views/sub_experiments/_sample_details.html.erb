@@ -1,0 +1,64 @@
+<script type="text/javascript" language="javascript" charset="utf-8">
+function download_sub_exp_data(id,type){
+  document.location.href = "/sub_experiments/download_sub_exp_data?id=" + id + "&type=" + type; 
+}
+
+</script>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Sample description</div>
+  <div class="panel-body">
+    <table> 
+      <tr>
+        <td class="textbox-content-title"> Project Title:   </td><td> <%= @experiment.title  %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Project Description:   </td><td> <%= raw @experiment.description %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Clone Extraction:   </td><td> <%= raw @clone_method %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Target species:   </td><td> <%= raw @target_sp %> </td>
+      </tr>
+    </table>
+    <br />
+    <div class="splitline"> </div>
+    <br />
+    <table>
+      <tr>
+        <td class="textbox-content-title"> Sample Name:   </td><td> <%=  @sub_experiment.sample_name %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Org Name:      </td><td> <%=  @sub_experiment.sample_name_org %> </td>
+      </tr><tr>
+        <% @factor_name.each_with_index do |name,i| %>
+        </tr><tr>
+        <td class="textbox-content-title"> <%= name %>:   </td><td> <%=  @sub_experiment['factor'+ (i+1).to_s] %> </td>
+      <% end %>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<% if @sub_experiment.sample_id > 0 %>
+  <br>
+<div class="panel panel-default">
+  <div class="panel-heading">Sample Details</div>
+  <div class="panel-body">
+    <table class="table"> 
+      <tr><td> Raw reads</td><td> <%= @raw_reads %> </td><td> </td><td> </td></tr>
+      <% if @sub_experiment.ex_clone %>
+      <tr><td> Clone reads(NT)</td><td> <%= @sample_desc["reads_nt"] %> </td><td> Clone types (NT)</td><td> <%= @sample_desc["types_nt"] %> </td></tr>
+      <tr><td> Clone reads(AA)</td><td> <%= @sample_desc["reads_aa"] %> </td><td> Clone types (AA)</td><td> <%= @sample_desc["types_aa"] %> </td></tr>
+    <% end %>
+      <tr><td> Quality data</td><td> <button class="btn btn-mini" onclick="download_sub_exp_data(<%= @sub_experiment.id %>,'qc')">Download</button> </td>
+        
+      <% if @sub_experiment.ex_clone %>
+        <td> Clone data</td><td>  <button class="btn btn-mini" onclick="download_sub_exp_data(<%= @sub_experiment.id %>,'clone')">Download</button> </td>
+      <% else %>
+        <td> </td><td> </td>
+      <% end %>
+      </tr>
+    </table>
+
+
+  </div>
+</div>
+<% end %>

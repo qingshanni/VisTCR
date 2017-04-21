@@ -1,0 +1,134 @@
+<style>
+.ui-helper-reset {
+    font-size: 11px;
+    font-family: verdana,arial,sans-serif;
+}
+</style>
+<script>
+    $(function() {
+      $( "#accordion" ).accordion({
+        heightStyle: "content"
+    });
+      $("div.ui-layout-west").resize(function(){
+          var w = $("div.ui-layout-west").width()-40;
+          $("#grid_experiment").setGridWidth(w);
+          $("#grid_sub_experiment").setGridWidth(w);
+       });
+  }); 
+</script>
+<div class="ui-layout-north" >
+  <div id="accordion">
+    <h3>Data Management</h3>
+    <div>
+
+      <table id='grid_experiment'> </table>
+      <div class="btn-group">
+        <button class="btn btn-mini" onclick= "new_experiment()">New</button>
+        <button class="btn btn-mini" onclick= "edit_experiment()">Edit</button>
+        <button class="btn btn-mini" onclick= "del_experiment()">Delete</button>
+      </div>
+      <table id='grid_sub_experiment'> </table>
+      <div class="btn-group">
+        <button class="btn btn-mini" onclick= "new_sample()">New</button>
+        <button class="btn btn-mini" onclick= "rename_sample()">Edit</button>
+        <button class="btn btn-mini" onclick= "del_sample()">Delete</button>
+      </div>
+    <button class="btn btn-primary btn-mini pull-right" onclick= "extract_clone()"> Parse </button>
+    </div>
+    <h3>Sequencing Qualify</h3>
+    <div>
+      <!--
+      <p><a href="#"  onclick= "qc_analysis(2) "> Per base sequence quality </a></p>
+      <p><a href="#"  onclick= "qc_analysis(3) "> Per sequence quality scores </a></p>
+      <p><a href="#"  onclick= "qc_analysis(4) "> Per base sequence content </a></p>
+      <p><a href="#"  onclick= "qc_analysis(5) "> Per base GC content </a></p>
+      <p><a href="#"  onclick= "qc_analysis(6) "> Per sequence GC content </a></p>
+      <p><a href="#"  onclick= "qc_analysis(7) "> Per base N content </a></p>
+      <p><a href="#"  onclick= "qc_analysis(8) "> Sequence Length Distribution </a></p>
+      <p><a href="#"  onclick= "qc_analysis(9) "> Sequence Duplication Levels </a></p>
+      <p><a href="#"  onclick= "qc_analysis(10) "> Overrepresented sequences  </a></p>
+      -->
+
+      <p><a href="#"  onclick= "qc_analysis(3) "> Sequencing Qualify </a></p>
+      <p><a href="#"  onclick= "qc_analysis(4) "> Base Sequence Content </a></p>
+      <p><a href="#"  onclick= "qc_analysis(5) "> GC base Sequence Content </a></p>
+      <p><a href="#"  onclick= "qc_analysis(8) "> Sequence Length Distribution</a></p>
+
+    </div>
+
+    <h3>Single Sample Analysis </h3>
+    <div>
+      <p>TRBV or/and TRBJ Usage</p>
+      <ul>
+        <li><a href="#"  onclick= "single_sample_tcr_analysis('v')" > TRBV Usage  </a></li>
+        <li><a href="#"  onclick= "single_sample_tcr_analysis('j')" > TRBJ Usage  </a></li>
+        <li><a href="#"  onclick= "single_sample_tcr_analysis('vj')" > TRBV and J Usage </a></li>
+      </ul>
+      <p> CDR3 Spectratype</p>
+      <ul>
+        <li> <a href="#"  onclick= "single_sample_tcr_analysis('cdr3_nt')" >CDR3 length distribution(nt)</a></li>
+        <li> <a href="#"  onclick= "single_sample_tcr_analysis('cdr3_aa')" >CDR3 length distribution(aa)</a></li>
+      </ul>
+      <p> Clonotype Distribution Plot</p>
+      <ul>
+        <li> <a href="#"  onclick= "single_sample_tcr_analysis('cfp_nt')" >Clonotypes Frequency plots (nt)</a></li>
+        <li> <a href="#"  onclick= "single_sample_tcr_analysis('cfp_aa')" >Clonotypes Frequency plots (aa)</a></li>
+        <li> <a href="#"  onclick= "single_sample_tcr_analysis('cvg')" >   Convergent analysis</a></li>
+      </ul>
+    </div>
+
+    <h3>Pairwise Samples Analysis</h3>
+    <div>
+      <p> Samples selection </p>
+      <ul>
+      <li><a href="#"  onclick="pairwaise_analysis_params()"> Select samples </a></li>
+          <%= hidden_field_tag :group1, "",:id=> "id_controls_selected" %>
+          <%= hidden_field_tag :group2, "",:id=> "id_interest_selected" %>
+           <%= hidden_field_tag :group1_r, "",:id=> "id_controls_selected_r" %>
+          <%= hidden_field_tag  :group2_r, "",:id=> "id_interest_selected_r" %>
+ 
+      </ul>
+      <p> Overlapping analysis </p>
+      <ul>
+      <li><a href="#"  onclick= "pairwaise_analysis('cd_nt')"> Clonotypes distribution (nt) </a></li>
+      <li><a href="#"  onclick= "pairwaise_analysis('cd_aa')"> Clonotypes distribution (aa) </a></li>
+      <li><a href="#"  onclick= "pairwaise_analysis('cvg')"> Convergent analysis </a></li>
+      </ul>
+      <p>Unoverlapping analysis </p>
+      <ul>
+      <li><a href="#"  onclick= "pairwaise_analysis('cd_nt_un')"> Clonotypes distribution (nt) </a></li>
+      <li><a href="#"  onclick= "pairwaise_analysis('cd_aa_un')"> Clonotypes distribution (aa) </a></li>
+      </ul>
+    </div>
+
+    <h3> Multi-samples Analysis</h3>
+    <div>
+      <p> Descriptive statistics </p>
+      <ul>
+      <li><a href="#"  onclick= " whole_tcr_analysis('mac') "> Most abundant clonotypes </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('csh') "> Clonal space homeostasis </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('ct') "> Clonotype tracking </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('oa') "> Overlap analysis </a></li>
+      </ul>
+ 
+      </ul>
+      <p>Similarity analysis </p>
+      <ul>
+      <li><a href="#"  onclick= " whole_tcr_analysis('sig') "> Similarity in groups </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('sm') "> Samples similarity matrix </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('cl') "> Cluster analysis </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('ps') "> Pairwise similarity analysis  </a></li>
+      </ul>
+      <p>Diversity analysis </p>
+      <ul>
+      <li><a href="#"  onclick= " whole_tcr_analysis('bdi') "> Bio-diversity index </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('st') "> Significant Test  </a></li>
+      <li><a href="#"  onclick= " whole_tcr_analysis('pda') "> Pairwise diversity analysis </a></li>
+      </ul>
+ 
+    </div>
+
+
+
+
+</div> 

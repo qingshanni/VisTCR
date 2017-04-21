@@ -1,0 +1,7 @@
+<%if @sub_experiment.sample_id > 0 %>
+  $("#center_display").html("<%= j render :partial=> 'fig_single_bar' %>");
+  $("#east").html("<%= j render :partial=>'data_table'%>");
+<% else%>  
+  render :js=>"alert('There no seq data,Please upload it firstly!')"
+<% end %> 
+

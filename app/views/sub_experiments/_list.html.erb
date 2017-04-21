@@ -1,0 +1,27 @@
+<table class="table   table-striped">
+  <thead>
+    <tr>
+      <th>NO.</th>
+      <th><%= sort_link 'Title', :title %></th>
+      <th><%= sort_link 'type',:description %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% num = 0   %>
+    <% @sub_experiments.each do |experiment| %>
+      <tr>
+        <% num = num +1   %>
+        <td><%= num %></td>
+        <td><%= experiment.title %></td>
+        <td><%= experiment.description %></td>
+        <td><%= link_to 'S', experiment, :class=>"btn btn-mini",:remote => true %> 
+          <%= link_to 'E', edit_sub_experiment_path(experiment), :class=>"btn btn-mini",:remote => true %> 
+          <%= link_to 'D', experiment, :class=>"btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' },:remote => true %> 
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br/>
+

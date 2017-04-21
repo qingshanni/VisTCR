@@ -1,0 +1,8 @@
+$.unblockUI();
+<%if @flag %> 
+  $('#grid_sub_experiment').jqGrid().trigger('reloadGrid'); 
+  alert('File upload successfully!');
+<% else %>
+  alert('File format wrong, Please check the upload file carefully.');
+<% end %>
+

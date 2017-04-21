@@ -1,0 +1,12 @@
+<%= simple_form_for(@channel, :html => { :multipart => true }, :remote => true) do |f| %>
+
+  <div class="form-inputs">
+    <%= f.input :primer_id ,:label => 'Gene ID' , :input_html => { :style=>"width: 98%; "}%>
+    <%= f.input :channel_type, :label =>'Channel type', :collection => [["Sample",1],["Control",0]], :as => :radio_buttons,  :item_wrapper_class => 'inline' %>
+    <%= f.input :ct_value ,:label => 'CT Value' , :input_html => { :style=>"width: 98%; "}%>
+  </div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= f.button :submit,:id => "submit_create" %>
+  </div>
+<% end %>

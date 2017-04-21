@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Sub experiment:</b>
+  <%= @channel.sub_experiment_id %>
+</p>
+
+<p>
+  <b>Primer:</b>
+  <%= @channel.primer_id %>
+</p>
+
+<p>
+  <b>Channel:</b>
+  <%= @channel.channel_id %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%= @channel.type %>
+</p>
+
+<p>
+  <b>Ct value:</b>
+  <%= @channel.ct_value %>
+</p>
+
+
+<%= link_to 'Edit', edit_channel_path(@channel) %> |
+<%= link_to 'Back', channels_path %>

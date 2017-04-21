@@ -1,0 +1,40 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading"><%= raw @data_east[:title] %> </div>
+  <div class="panel-body">
+ 
+    <div style="height:300px;overflow:auto">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <% @data_east[:head].each do |s| %>
+              <th> <%= raw s %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @data_east[:body].each do |dd| %>
+            <tr>
+              <% dd.each do |d| %>
+                <td> <%= raw d %> </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div>
+  <a class="btn btn-mini pull-right" href="<%= raw @data_east[:url_download] %>"> Download Data</a>
+</div>
+<br />
+<br />
+<br />
+<br />
+<i class="icon-info-sign"></i> Tips
+<br/>
+<%= raw @data_east[:help] %>
+
+
+

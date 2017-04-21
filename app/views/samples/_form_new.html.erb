@@ -1,0 +1,71 @@
+
+<script type="text/javascript">
+    $(function(){
+        $("#ref_default").click(function(){
+          $("#upload_ref_file").hide();
+          $("#ref_check").val("0");
+          } );
+         $("#ref_custom").click(function(){
+          $("#upload_ref_file").show();
+          $("#ref_check").val("1");
+          } );
+
+         $("#use_ref").click(function(){
+           if( $("#use_ref").is(':checked')){
+                  $("#ref_par").show();
+                }else{
+                  $("#ref_par").hide();
+                }
+          } );
+    })
+      function download_ref_file_default(){
+        document.location.href = "/samples/download_ref_file_default"; 
+      }
+</script>
+
+
+<%= simple_form_for(@sample,:remote => true) do |f| %>
+  <p class="validateTips">All form fields are required.</p>
+  <div class="form-inputs">
+    <%= f.input :title, :class => "text ui-widget-content ui-corner-all" , :input_html => { :style=>"width: 98%; "}%>
+    <%= f.input :description, :class => "text ui-widget-content ui-corner-all",  :input_html => { :style=>"width: 98%; height: 100px;"}%>
+
+    <%= label_tag(:fastq_file, "Upload fastq file") %>
+    <%= file_field_tag "fastq_file" %>
+
+    <br>
+    <br>
+    <div style="display: none;">
+      <label class="checkbox">
+        <input type="checkbox" name="use_ref" id="use_ref"> Use spike-ins  
+      </label>
+      <div id = "ref_par" style="display: none;">
+        <p> (<a href="javascript:void(0)" onclick="download_ref_file_default();return false">Default file</a>)</p>  
+        <label class="radio inline">
+          <input type="radio" name="ref_method" id="ref_default" value="0" checked>
+          Use default
+        </label>
+        <label class="radio inline">
+          <input type="radio" name="ref_method" id="ref_custom" value="1">
+          Custom
+        </label>
+        <br>
+        <div id="upload_ref_file" style="display: none;">
+          <%= label_tag(:ref_file, "Upload reference file") %>
+          <%= file_field_tag 'ref_file' %>
+        </div>
+      </div>
+
+     
+    </div>
+
+
+
+    <%= hidden_field_tag :pid,@pid %>
+    <%= hidden_field_tag :ref_check,"0" %>
+   </div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= f.button :submit, :id => "submit_create" %>
+  </div>
+<% end %>

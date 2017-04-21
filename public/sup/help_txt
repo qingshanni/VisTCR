@@ -1,0 +1,117 @@
+#SQ_SQ
+@ Sequencing Qualify 
+Analyzing the sequence quality score on each base position in a sequencing data file.The per sequence quality score report allows you to see if a subset of your sequences have universally low quality values. The X axis shows the quality score, the Y axis shows the number of sequences have one same quality score. A higher score represent a lower error rate. 
+
+#SQ_BSC
+@ Base Sequence Content
+Analyzing the proportion of each normal DNA bases on each base position in a sequencing data file. The X axis shows the position of the base sequence, the Y axis shows the proportion of the base.
+
+#SQ_GC
+@GC base Sequence Content 
+This diagram shows GC Base Sequence Content across the whole length of each sequence in a sequencing data file. he X axis shows the position of the base sequence, the Y axis shows the proportion of G and C bases.
+
+#SQ_LEN
+@Sequence Length Distribution
+This diagram shows the length distribution of detected sequences, The X axis shows the position of the base sequence, the Y axis shows the number of reads with certain length. A very short sequence length indicate an incomplete sequencing result.
+
+#SSTA_VJ_V
+@TRBV Usage 
+Analyzing the frequencies of TRBV gene segments in single TCR sequencing data.The Y axis shows the frequency of each V segment.
+
+#SSTA_VJ_J
+@TRBJ Usage 
+Analyzing the frequencies of TRBJ gene segments in single TCR sequencing data. The Y axis shows the frequency of each V segment.
+
+#SSTA_VJ_VJ
+@TRBV and J Usage 
+Analyzing the frequencies of TRBV-TRBJ combinations in single TCR sequencing data. The X axis shows the V segments, the Y axis shows the J segments, the color of cell represents the frequency of each TRBV-TRBJ combination.
+
+#SSTA_CS_LENNT
+@CDR3 length distribution(nt)
+Analyzing the length distribution of CDR3 nucleotide sequences in single TCR sequencing data.The graph can be visualized by either stacked or grouped bars.
+
+
+#SSTA_CS_LENAA
+@CDR3 length distribution(aa)
+Analyzing the length distribution of CDR3 amino acid sequences in single TCR sequencing data.The figure can be visualized by either stacked or grouped bars.
+
+#SSTA_CD_CFNT
+@Clonotypes Frequency plots (nt)
+The Clonotype Distribution Plot shows the frequency of each specific nucleotide sequence in the TCR repertoire of the selected sample. the X axis is sequence ID, the Y axis is frequency.Both of the coordinates are in logarithm.
+
+#SSTA_CD_CFAA
+@Clonotypes Frequency plots (aa)
+The Clonotype Distribution Plot shows the frequency of each specific amino acid sequence in the TCR repertoire of the selected sample. the X axis is sequence ID, the Y axis is frequency.Both of the coordinates are in logarithm.
+
+#SSTA_CD_CA
+@Convergent analysis
+The convergent analysis shows a variety of dots, whose area represents the number of unique CDR3 nucleotide sequences that have been translated into the same CDR3 amino acid sequence. The degenerated nucleotide sequences are listed in the upper table.
+
+#PTA_OA_CDNT
+@Clonotypes distribution (nt) 
+This analysis show the frequencies of the nucleotide sequences that overlap in the selected groups.
+
+#PTA_OA_CDAA
+@Clonotypes distribution (aa) 
+This analysis show the frequencies of the amino acid sequences that overlap in the selected groups.
+
+#PTA_OA_CA
+@Convergent analysis 
+The convergent analysis is used to evaluate the degeneracy of the shared T cell clonotypes. The area of the dots represents the number of unique CDR3 nucleotide sequences that are translated into same CDR3 amino acid sequence.
+
+
+#PTA_UA_CDNT
+@Clonotypes distribution (nt) 
+The un-overlapping clonotype analysis displays the nt distribution frequency of clonotypes that are not shared between the two data sets. The X axis is sequence ID, the Y axis is frequency. Both of the coordinates are in logarithm.
+
+#PTA_UA_CDAA
+@Clonotypes distribution (aa) 
+The un-overlapping clonotype analysis displays the aa distribution frequency of clonotypes that are not shared between the two data sets. The X axis is sequence ID, the Y axis is frequency. Both of the coordinates are in logarithm.
+
+#WTRA_DS_MAC
+@Most abundant clonotypes 
+Analyzing the proportions of the most abundant clonotypes’ sum of reads to the overall number of reads in  combined sample groups.
+
+
+#WTRA_DS_CSH
+@Clonal space homeostasis 
+The method shows the proportional distribution of clonetypes according to their sequence frequency in grouped samples. The resulting analysis shows whether the clonotypes have expanded or contracted, which is called space homeostasis. 
+
+
+#WTRA_DS_CT
+@Clonotype tracking 
+The upper graph shows the counts that specific clonotypes arise in different datasets, and the lower graph shows the number of clonotypes found in each sharing category.
+
+
+#WTRA_DS_OA
+@Overlap analysis 
+The overlap analysis provides a heat-map matrix of the shared number of clonotypes between the grouped data sets.Users can select individual cells in the heat map to look at more specific details of the data in that corresponding row and column. The color and size of the heat map can be adjusted by changing the scales at the top of the graph. 
+
+#WTRA_SA_SIG
+@Similarity in groups 
+This analysis shows the average value of similarity between pairwise samples in one data set. 
+
+#WTRA_SA_SSM
+@Samples similarity matrix 
+This analysis shows similarities within each group, defined by the average similarity between all paired samples in two related data sets. The colors and size of the heat map can be adjusted by using the bars on top of the graph.
+
+#WTRA_SA_CA
+@ Cluster analysis 
+The analysis shows the similarity matrix of all grouped data sets together, using several available methods for cluster analysis. The cluster analysis is performed with the similarity profiles between all grouped TCR sequencing datasets. The similarity profiles of one grouped TCR sequencing dataset is a vector that represented the similarity between the grouped TCR sequencing dataset to all of the grouped TCR sequencing datasets. 
+
+#WTRA_SA_PSA
+@Pairwise similarity analysis 
+This analysis categorizes the similarity indices between selected sample groups, and performs statistical testing on these grouped samples. If the experimental samples are paired, a paired t-test can be performed if the user selects the paired option.
+
+#WTRA_DA_BDI
+@Bio-diversity index 
+Samples are combined according to the factors listed in the experiment design file, and used to calculate the biodiversity index. 
+
+#WTRA_DA_ST
+@Significant Test
+This performs a one-way ANOVA of the biodiversity between different data sets.
+
+#WTRA_DA_PDA
+@Pairwise diversity analysis 
+In this analysis, two selected groups of samples are categorized together to perform statistical hypothesis testing.
+#end

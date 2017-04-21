@@ -1,0 +1,472 @@
+<script type="text/javascript" language="javascript" charset="utf-8">
+  
+  $(function() {
+     $('#nav_seq_data').addClass("active");
+      var grid_project  = $('#grid_project');
+      var grid_sample = $('#grid_sample');
+
+      var w_width  =$(window).width()-20;
+      var w_height =$(window).height()-280;
+
+      grid_project.jqGrid({ 
+        datatype: "json", 
+	height:  w_height /3,
+        width:  w_width/2,
+        url:'/projects/jqgrid_list.json', 
+        datatype: "json", 
+        colNames:['ID','Title','Created'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:50}, 
+                  {name:'title',index:'title'}, 
+                  {name:'created_at',index:'created_at', width:100}, 
+                 ], 
+       rowNum:20, 
+       rowList:[10,20,30], 
+       pager: '#grid_project_pager',
+       sortname: 'created_at', 
+       sortorder: "asc", 
+       rownumbers: true,
+       onSelectRow: function(ids) { 
+            var  pj = grid_project.jqGrid('getRowData',ids);
+            grid_sample.jqGrid('setGridParam',{url:'/samples/jqgrid_list.json?id='+ids,page:1,}); 
+            grid_sample.jqGrid('setCaption','Samples list: ' + pj.title).trigger('reloadGrid'); 
+            show_project();
+
+             },
+       loadComplete: function(data,xhr){
+            grid_sample.jqGrid('setGridParam',{url:'/samples/jqgrid_list.json',page:1,}); 
+            grid_sample.jqGrid('setCaption','Samples').trigger('reloadGrid'); 
+            $('#center_show_project').empty();
+              },
+       caption:"Experiment List" 
+       }); 
+  grid_project.jqGrid('filterToolbar');     
+  grid_project.jqGrid('navGrid','#grid_project_pager',{edit:false,add:false,del:false,search:false})
+                       .navButtonAdd('#grid_project_pager',{
+                                      caption: "Delete",
+                                      buttonicon:"ui-icon-trash",
+                                      title: "Delete",
+                                      onClickButton: function(){del_project();},
+                                      position:"first"})
+                       .navButtonAdd('#grid_project_pager',{
+                                      caption: "Edit",
+                                      buttonicon:"ui-icon-pencil",
+                                      title: "Edit",
+                                      onClickButton: function(){edit_project();},
+                                      position:"first"})
+                      .navButtonAdd('#grid_project_pager',{
+                                      caption: "New",
+                                      buttonicon:"ui-icon-plus",
+                                      title: "New",
+                                      onClickButton: function(){new_project();},
+                                      position:"first"});
+ 
+
+      grid_sample.jqGrid({ 
+        datatype: "json", 
+	height: w_height*2/3,
+        width:  w_width/2,
+        url:'/samples/jqgrid_list.json', 
+        datatype: "json", 
+        colNames:['ID','Title', 'Created'], 
+        colModel:[ 
+                  {name:'sid',index:'sid', width:50}, 
+                  {name:'title',index:'title'}, 
+                  {name:'created_at',index:'created_at', width:100}, 
+                 ], 
+       rowNum:20, 
+       rowList:[10,20,30], 
+       pager: '#grid_sample_pager',
+       sortname: 'created_at', 
+       sortorder: "asc", 
+       rownumbers: true,
+       onSelectRow: function(ids) { 
+          $('#center_show_qc').empty();
+          $.ajax({
+             url: "/samples/" + ids,
+             async: false,
+             type: "get",
+            success: function(msg){  
+            $('#center_show_sample').html( msg );}
+           });
+  
+             },
+       loadComplete: function(data,xhr){
+            $('#center_show_sample').empty();
+            $('#center_show_qc').empty();
+             
+              },
+       caption:"Samples" 
+       }); 
+  grid_sample.jqGrid('filterToolbar');     
+  grid_sample.jqGrid('navGrid','#grid_sample_pager',{edit:false,add:false,del:false,search:false})
+                       .navButtonAdd('#grid_sample_pager',{
+                                      caption: "Delete",
+                                      buttonicon:"ui-icon-trash",
+                                      title: "Delete",
+                                      onClickButton: function(){del_iterm();},
+                                      position:"first"})
+                       .navButtonAdd('#grid_sample_pager',{
+                                      caption: "Edit",
+                                      buttonicon:"ui-icon-pencil",
+                                      title: "Edit",
+                                      onClickButton: function(){edit_iterm();},
+                                      position:"first"})
+                      .navButtonAdd('#grid_sample_pager',{
+                                      caption: "New",
+                                      buttonicon:"ui-icon-plus",
+                                      title: "New",
+                                      onClickButton: function(){add_iterm();},
+                                      position:"first"});
+});
+
+
+
+
+function add_iterm(){
+  var gr = $('#grid_project').getGridParam("selrow");
+  if( gr != null ){ }else{
+    alert('Please select a experiment firstly!')
+    return ;
+  }
+
+
+  $.ajax({
+     url: "/samples/new?pid=" + gr,
+     async: false,
+     type: "get",
+    success: function(msg){  
+    $('body').append("<div id='dialog_modal'>" + msg +' </div>')}
+   });
+
+$( "#dialog_modal" ).dialog({
+  autoOpen: true,
+  height: 600,
+  width: 750,
+  modal: true,
+  title: "Upload samples", 
+  close: function( event, ui ) {
+             $( this ).dialog( "destroy");
+             $( this ).remove();
+  },
+  buttons: {
+    "Upload": function() {
+      var name = $( "#sample_title" );
+      var file = $( "#fastq_file" );
+      var ref_file = $("#ref_file"); 
+      var tips = $( ".validateTips" ); 
+      var allFields = $( [] ).add( name ).add( file ); 
+
+      if($("#ref_check").val() == "1"  &  $("#use_ref").is(':checked')){
+            allFields = $( [] ).add( name ).add( file ).add(ref_file);
+        }else{
+            allFields = $( [] ).add( name ).add( file );
+        }
+
+      var bValid = true;
+      allFields.removeClass( "ui-state-error" );
+      bValid = bValid && checkEmpty( name, "Sample title", 1 ,tips);
+      bValid = bValid && checkEmpty( file, "Sequencing file", 1 ,tips);
+      if($("#ref_check").val() == "1" &  $("#use_ref").is(':checked')){
+         bValid = bValid && checkEmpty( ref_file, "Reference file", 1 ,tips);
+      }
+      if ( bValid ) {
+         wait_start("Upload files, This will take some time, Please waiting ...");
+          $("#submit_create").trigger("click");
+          $( this ).dialog( "destroy");
+          $( this ).remove();
+        };
+      },
+    Cancel: function() {
+              $( this ).dialog( "destroy");
+              $( this ).remove();
+           }}
+    });
+}
+
+
+
+function edit_iterm(){
+  var gr = $('#grid_sample').getGridParam("selrow");
+  if( gr != null ){ }else{
+    alert('Please select a sample firstly!')
+    return ;
+  }
+
+  $.ajax({
+     url: "/samples/"+ gr + "/edit",
+     async: false,
+     type: "get",
+    success: function(msg){  
+    $('body').append("<div id='dialog_modal'>" + msg +' </div>')}
+   });
+
+$( "#dialog_modal" ).dialog({
+  autoOpen: true,
+  height: 600,
+  width: 750,
+  modal: true,
+  title: "Edit samples", 
+  close: function( event, ui ) {
+             $( this ).dialog( "destroy");
+             $( this ).remove();
+  },
+  buttons: {
+    "OK": function() {
+      var name = $( "#sample_title" );
+      var tips = $( ".validateTips" ); 
+      var allFields = $( [] ).add( name ); 
+      var bValid = true;
+      allFields.removeClass( "ui-state-error" );
+      bValid = bValid && checkEmpty( name, "Sample title", 1 ,tips);
+      if ( bValid ) {
+          $("#submit_create").trigger("click");
+          $( this ).dialog( "destroy");
+          $( this ).remove();
+        };
+      },
+    Cancel: function() {
+              $( this ).dialog( "destroy");
+              $( this ).remove();
+           }}
+    });
+
+ 
+}
+
+function del_iterm(){
+  var gr = $('#grid_sample').getGridParam("selrow");
+  if( gr != null ){
+    if(confirm('Are you sure to delete the selected sample?')){
+      $.ajax({
+        url: "/samples/delete_recorder.text?id="+ gr ,
+        async: false,
+        type: "get",
+        success: function(msg){  
+                $('#grid_sample').jqGrid().trigger('reloadGrid'); 
+                alert(msg);
+                $('#display_details').empty();
+        }
+      });
+      }
+  } else {
+    alert("Please select experiment firstly");
+  }
+
+
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//////   project  new edit delete
+////////////////////////////////////////////////////////////////////////////
+function new_project(){
+  $.ajax({
+     url: "/projects/new",
+     async: false,
+     type: "get",
+    success: function(msg){  
+    $('body').append("<div id='dialog_modal'>" + msg +' </div>')}
+   });
+
+$( "#dialog_modal" ).dialog({
+  autoOpen: true,
+  height: 400,
+  width: 750,
+  modal: true,
+  title: "New Experiment", 
+  close: function( event, ui ) {
+             $( this ).dialog( "destroy");
+             $( this ).remove();
+  },
+  buttons: {
+    "OK": function() {
+      var name = $( "#project_title" );
+      var tips = $( ".validateTips" ); 
+      var allFields = $( [] ).add( name ); 
+      var bValid = true;
+      allFields.removeClass( "ui-state-error" );
+      bValid = bValid && checkEmpty( name, "Project title", 1 ,tips);
+      if ( bValid ) {
+          $("#submit_create").trigger("click");
+          $( this ).dialog( "destroy");
+          $( this ).remove();
+        };
+      },
+    Cancel: function() {
+              $( this ).dialog( "destroy");
+              $( this ).remove();
+           }}
+    });
+}
+
+
+
+function edit_project(){
+  var gr = $('#grid_project').getGridParam("selrow");
+  if( gr != null ){ }else{
+    alert('Please select a experiment firstly!')
+    return ;
+  }
+
+  $.ajax({
+     url: "/projects/"+ gr + "/edit",
+     async: false,
+     type: "get",
+    success: function(msg){  
+    $('body').append("<div id='dialog_modal'>" + msg +' </div>')}
+   });
+
+$( "#dialog_modal" ).dialog({
+  autoOpen: true,
+  height: 400,
+  width: 750,
+  modal: true,
+  title: "Edit experiment", 
+  close: function( event, ui ) {
+             $( this ).dialog( "destroy");
+             $( this ).remove();
+  },
+  buttons: {
+    "OK": function() {
+      var name = $( "#project_title" );
+      var tips = $( ".validateTips" ); 
+      var allFields = $( [] ).add( name ); 
+      var bValid = true;
+      allFields.removeClass( "ui-state-error" );
+      bValid = bValid && checkEmpty( name, "Project title", 1 ,tips);
+      if ( bValid ) {
+          $("#submit_create").trigger("click");
+          $( this ).dialog( "destroy");
+          $( this ).remove();
+        };
+      },
+    Cancel: function() {
+              $( this ).dialog( "destroy");
+              $( this ).remove();
+           }}
+    });
+
+ 
+}
+
+function del_project(){
+  var gr = $('#grid_project').getGridParam("selrow");
+  if( gr != null ){
+    if(confirm('Are you sure to delete the selected Project?')){
+      $.ajax({
+        url: "/projects/delete_recorder.text?id="+ gr ,
+        async: false,
+        type: "get",
+        success: function(msg){  
+                $('#grid_project').jqGrid().trigger('reloadGrid'); 
+                alert(msg);
+        }
+      });
+      }
+  } else {
+    alert("Please select Project firstly");
+  }
+
+
+
+}
+
+function show_project(){
+  var gr = $('#grid_project').getGridParam("selrow");
+  if( gr != null ){ }else{
+    alert('Please select a experiment firstly!')
+    return ;
+  }
+    $.ajax({
+        url: "/projects/" + gr,
+        async: false,
+        type: "get",
+        success: function(msg){  
+            $('#center_show_project').html( msg );}
+    });
+
+}
+
+function wait_start(msg){
+
+            $.blockUI({ css: { 
+                      border: 'none', 
+                      padding: '30px', 
+                      'font-size': '20px',
+                      backgroundColor: '#000', 
+                      '-webkit-border-radius': '10px', 
+                      '-moz-border-radius': '10px', 
+                      opacity: .5, 
+                      color: '#fff', 
+                      }, 
+                     message: msg, 
+                      });
+ 
+}
+
+
+
+
+// functions for edit dialog 
+function updateTips(tips,t) {
+  tips
+    .text( t )
+    .addClass( "ui-state-highlight" );
+  setTimeout(function() {tips.removeClass( "ui-state-highlight", 1500 );
+      }, 500 );
+}
+
+function checkEmpty( o, n, min,tips ) {
+  if (  o.val().length < min ) {
+    o.addClass( "ui-state-error" );
+    updateTips(tips, n + " can not be empty" );
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+/////////////////////////////////////////////////////////////////
+////////////   QC
+/////////////////////////////////////////////////////////////////
+
+function qc_analysis(item){
+  var gr = $('#grid_sample').getGridParam("selrow");
+  if( gr != null ){ }else{
+    alert('Please select a sample firstly!')
+    return ;
+  }
+
+  wait_start("Running, Please waiting ...");
+  $.ajax({
+     url: "/samples/qc_analysis?id=" + gr + "&item=" + item,
+     async: false,
+     type: "get"
+      });
+
+}
+
+
+
+
+</script>
+
+
+
+
+
+
+<div style="margin: 30px">
+<div id="center_show_project" > </div>
+<div id="center_show_sample" > </div>
+<div id="center_show_qc" > </div>
+</div>
+
+<% content_for :west do %>
+  <%= render :partial => "west" %>
+<% end %>
+
+

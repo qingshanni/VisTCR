@@ -1,0 +1,11 @@
+<%= simple_form_for(@sub_experiment, :html => { :multipart => true }, :remote => true) do |f| %>
+
+  <div class="form-inputs">
+    <%= f.input :title,:label => 'Board title' , :input_html => { :style=>"width: 98%; "}%>
+  </div>
+
+
+  <div class="form-actions"  style= "display:none;">
+    <%= f.button :submit, :id => "submit_create" %>
+  </div>
+<% end %>

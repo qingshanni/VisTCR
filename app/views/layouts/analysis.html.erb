@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "TCR Data Analysis" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "TCR Data Analysis" %>">
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <%= yield(:head) %>
+  </head>
+<script>
+    $(document).ready(function () {
+      $('body').layout({
+        north: {
+          size: "auto", 
+          spacing_open: 0,
+          closable: false,
+          resizable: false
+        } ,        
+        west:{
+          size:300 
+        },
+        east:{
+          size:300 
+        },
+        applyDefaultStyles: true });
+    });
+  </script>
+  <body>
+    <div class="ui-layout-north">
+      <div class="navbar">
+        <nav class="navbar-inner">
+        <div class="container">
+          <%= render 'layouts/navigation' %>
+        </div>
+        </nav>
+      </div>
+    </div>
+    <div class="ui-layout-center" >
+      <%= yield %>
+    </div>
+    <div class="ui-layout-east">
+      <div id="east_experiment">  </div>
+      <div id="east" style="padding: 5px 10px 10px 10px;">  </div>
+    </div>
+    <div class="ui-layout-west" >
+      <%=  yield :west %>
+    </div>
+  </body>
+</html>

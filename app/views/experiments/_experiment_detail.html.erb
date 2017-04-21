@@ -1,0 +1,17 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading">Project Description </div>
+  <div class="panel-body">
+    <dl class="dl-horizontal text-overflow">
+      <dt> Title   </dt><dd> <%= @experiment.title  %> </dd>
+      <dt> Description   </dt><dd> <%= @experiment.description.gsub("\n","<br/>") if @experiment.description %> </dd>
+      <dt> Clone Extraction Method:   </dt><dd> <%= raw @experiment.extract_method %> </dd>
+    </dl>
+  </div>
+</div>
+<br>
+<br>
+ 
+
+
+

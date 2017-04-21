@@ -1,0 +1,30 @@
+<style>
+.ui-helper-reset {
+    font-size: 11px;
+    font-family: verdana,arial,sans-serif;
+}
+</style>
+<script>
+    $(function() {
+      $( "#accordion" ).accordion({
+        heightStyle: "content"
+    });
+      $("div.ui-layout-west").resize(function(){
+          var w = $("div.ui-layout-west").width()-10;
+          if(w < 300){
+             w = 300;
+          }
+          $("#grid_project").setGridWidth(w);
+          $("#grid_sample").setGridWidth(w);
+       });
+  }); 
+</script>
+
+<div>
+  <table id='grid_project'>        </table>
+  <div   id='grid_project_pager'>  </div>
+  <table id='grid_sample'> </table>
+  <div   id='grid_sample_pager'>  </div>
+</div>
+
+

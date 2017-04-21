@@ -1,0 +1,21 @@
+<%= simple_form_for(@channel, :url => {:controller => "/channels", :action => "update_conf"}, :html => { :multipart => true }, :remote => true,:method=>"post") do |f| %>
+  <div class="form-inputs">
+  <div class="row-fluid">
+    <div class="span6">
+     <%= f.input :position ,:label => 'Position' , :disabled => true  %>
+     <%= f.input :ct_value ,:label => 'Ct Value' , :disabled => true  %>
+     <%= f.input :sample ,:label => 'Sample' , :disabled => true %>
+    </div>
+    <div class="span6">
+      <%= f.input :detector ,:label => 'Detector' , :disabled => true %>
+      <%= f.input :task ,:label => 'Task' , :disabled => true %>
+      <%= f.input :confidence ,:label => 'Confidence' ,:collection => [["0",0],["1",1],["2",2],["3",3]]%>
+      <%= hidden_field_tag :ids, @channel.id %>
+    </div>
+  </div>
+</div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= f.button :submit,:id => "submit_create" %>
+  </div>
+<% end %>

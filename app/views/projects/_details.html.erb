@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Experimet Details</div>
+  <div class="panel-body">
+    <table> 
+      <tr>
+        <td class="textbox-content-title"  >Title:</td>
+        <td><%= @project.title  if @project.title %></td>
+      </tr> <tr>
+         <td class="textbox-content-title" >Description:</td>
+         <td><%= @project.description.gsub(/\n/,"<br/>").html_safe if @project.description %></td>
+      </tr><tr>
+         <td class="textbox-content-title" >Created at:</td>
+         <td><%= @project.created_at.strftime("%F %T") if @project.created_at %></td>
+      </tr><tr>
+         <td class="textbox-content-title" >Last update:</td>
+         <td><%= @project.updated_at.strftime("%F %T") if @project.updated_at %></td>
+      </tr>
+
+
+    </table>
+ 
+  </div>  
+</div>  

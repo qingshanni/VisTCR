@@ -1,0 +1,31 @@
+<h1>Listing channels</h1>
+
+<table>
+  <tr>
+    <th>Sub experiment</th>
+    <th>Primer</th>
+    <th>Channel</th>
+    <th>Type</th>
+    <th>Ct value</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @channels.each do |channel| %>
+  <tr>
+    <td><%= channel.sub_experiment_id %></td>
+    <td><%= channel.primer_id %></td>
+    <td><%= channel.channel_id %></td>
+    <td><%= channel.type %></td>
+    <td><%= channel.ct_value %></td>
+    <td><%= link_to 'Show', channel %></td>
+    <td><%= link_to 'Edit', edit_channel_path(channel) %></td>
+    <td><%= link_to 'Destroy', channel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Channel', new_channel_path %>

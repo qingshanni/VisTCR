@@ -1,0 +1,6 @@
+$.unblockUI(); 
+<% if @flag %>
+  $('#grid_sample').jqGrid().trigger('reloadGrid'); 
+<% else %>
+  alert("<%= @flag_txt %>") 
+<% end %>

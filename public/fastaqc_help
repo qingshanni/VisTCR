@@ -1,0 +1,343 @@
+
+<p>
+For each position a BoxWhisker type plot is drawn.  The elements of the
+plot are as follows:
+</p>
+<ul>
+<li>The central red line is the median value</li>
+<li>The yellow box represents the inter-quartile range (25-75%)</li>
+<li>The upper and lower whiskers represent the 10% and 90% points</li>
+<li>The blue line represents the mean quality</li>
+</ul>
+<p>
+The y-axis on the graph shows the quality scores.  The higher the score
+the better the base call.  The background of the graph divides the 
+y axis into very good quality calls (green), calls of reasonable quality
+(orange), and calls of poor quality (red).  The quality of calls on most
+platforms will degrade as the run progresses, so it is common to see
+base calls falling into the orange area towards the end of a read.
+</p>
+<p>
+It should be mentioned that there are number of different ways to encode
+a quality score in a FastQ file.  FastQC attempts to automatically determine
+which encoding method was used, but in some very limited datasets it is
+possible that it will guess this incorrectly (ironically only when your
+data is universally very good!).  The title of the graph will describe the
+encoding FastQC thinks your file used.
+</p>
+
+
+<h4>Warning</h4>
+<p>
+A warning will be issued if the lower quartile for any base is less
+than 10, or if the median for any base is less than 25.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will raise a failure if the lower quartile for any base is
+less than 5 or if the median for any base is less than 20.
+</p>
+
+####
+
+
+
+<h4>Summary</h4>
+<p>
+The per sequence quality score report allows you to see if a subset
+of your sequences have universally low quality values. 
+</p>
+
+
+<h4>Warning</h4>
+<p>
+A warning is raised if the most frequently observed mean quality is below 27 -
+this equates to a 0.2% error rate.
+</p>
+
+<h4>Failure</h4>
+<p>
+An error is raised if the most frequently observed mean quality is below 20 -
+this equates to a 1% error rate.
+</p>
+
+####
+
+
+<h4>Summary</h4>
+<p>
+Per Base Sequence Content plots out the proportion of each base
+position in a file for which each of the four normal DNA bases
+has been called.
+</p>
+
+<h4>Warning</h4>
+<p>
+This module issues a warning if the difference between A and T, or G
+and C is greater than 10% in any position.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will fail if the difference between A and T, or G and C
+is greater than 20% in any position.
+</p>
+
+
+####
+
+
+<h4>Summary</h4>
+<p>
+Per Base GC Content plots out the GC content of each base
+position in a file.
+</p>
+
+<h4>Warning</h4>
+<p>
+This module issues a warning it the GC content of any base strays more
+than 5% from the mean GC content.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will fail if the GC content of any base strays more than 10%
+from the mean GC content.
+</p>
+
+####
+
+
+<h4>Summary</h4>
+<p>
+This measures the GC content across the whole length
+of each sequence in a file.
+</p>
+
+<h4>Warning</h4>
+<p>
+A warning is raised if the sum of the deviations from the normal 
+distribution represents more than 15% of the reads.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will indicate a failure if the sum of the deviations from
+the normal distribution represents more than 30% of the reads.
+</p>
+
+
+####
+
+
+<h4>Summary</h4>
+<p>
+If a sequencer is unable to make a base call with sufficient confidence
+then it will normally substitute an N rather than a conventional base]
+call
+</p>
+<p>
+This module plots out the percentage of base calls at each position for
+which an N was called.
+</p>
+
+<p>
+It's not unusual to see a very low proportion of Ns appearing in a sequence, 
+especially nearer the end of a sequence.  However, if this proportion rises
+above a few percent it suggests that the analysis pipeline was unable to
+interpret the data well enough to make valid base calls.
+</p>
+
+<h4>Warning</h4>
+<p>
+This module raises a warning if any position shows an N content of &gt;5%.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will raise an error if any position shows an N content of &gt;20%.
+</p>
+
+
+
+
+####
+
+
+<h4>Summary</h4>
+<p>
+This module generates a graph showing the distribution of fragment sizes in the file.
+</p>
+<h4>Warning</h4>
+<p>
+This module will raise a warning if all sequences are not the same length.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will raise an error if any of the sequences have zero length.
+</p>
+
+
+
+
+####
+
+
+<h4>Summary</h4>
+<p>
+In a diverse library most sequences will occur only once in the final
+set.  A low level of duplication may indicate a very high level of 
+coverage of the target sequence, but a high level of duplication is
+more likely to indicate some kind of enrichment bias (eg PCR over
+amplification).
+</p>
+<p>
+This module counts the degree of duplication for every sequence in
+the set and creates a plot showing the relative number of sequences
+with different degrees of duplication.
+</p>
+
+<p>
+To cut down on the memory requirements for this module only sequences
+which occur in the first 200,000 sequences in each file are analysed,
+but this should be enough to get a good impression for the duplication
+levels in the whole file.  Each sequence is tracked to the end of the 
+file to give a representative count of the overall duplication level.  
+To cut down  on the amount of information in the final plot any sequences 
+with more  than 10 duplicates are placed into the 10 duplicates category 
+- so it's not unusual to see a small rise in this final category.  If 
+you see a big rise in this final category then it means you have a large 
+number of sequences with very high levels of duplication.
+</p>
+<p>
+Because the duplication detection requires an exact sequence match over
+the whole length of the sequence any reads over 75bp in length are truncated
+to 50bp for the purposes of this analysis.  Even so, longer reads are more
+likely to contain sequencing errors which will artificially increase the
+observed diversity and will tend to underrepresent highly duplicated sequences.
+</p>
+
+<h4>Warning</h4>
+<p>
+This module will issue a warning if non-unique sequences make up more than
+20% of the total.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will issue a error if non-unique sequences make up more than
+50% of the total.
+</p>
+
+
+
+
+####
+
+
+<h4>Summary</h4>
+<p>
+A normal high-throughput library will contain a diverse set
+of sequences, with no individual sequence making up a tiny
+fraction of the whole.  Finding that a single sequence is very
+overrepresented in the set either means that it is highly 
+biologically significant, or indicates that the library is
+contaminated, or not as diverse as you expected.
+</p>
+<p>
+This module lists all of the sequence which make up more than
+0.1% of the total.  To conserve memory only sequences which
+appear in the first 200,000 sequences are tracked
+to the end of the file.  It is therefore possible that a sequence
+which is overrepresented but doesn't appear at the start of the file
+for some reason could be missed by this module.
+</p>
+<p>
+For each overrepresented sequence the program will look for matches
+in a database of common contaminants and will report the best hit
+it finds.  Hits must be at least 20bp in length and have no more
+than 1 mismatch.  Finding a hit doesn't necessarily mean that this
+is the source of the contamination, but may point you in the right
+direction.  It's also worth pointing out that many adapter sequences
+are very similar to each other so you may get a hit reported which
+isn't technically correct, but which has very similar sequence to
+the actual match.
+</p>
+<p>
+Because the duplication detection requires an exact sequence match over
+the whole length of the sequence any reads over 75bp in length are truncated
+to 50bp for the purposes of this analysis.  Even so, longer reads are more
+likely to contain sequencing errors which will artificially increase the
+observed diversity and will tend to underrepresent highly duplicated sequences.
+</p>
+
+
+<h4>Warning</h4>
+<p>
+This module will issue a warning if any sequence is found to represent
+more than 0.1% of the total.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will issue an error if any sequence is found to represent
+more than 1% of the total.
+</p>
+
+
+
+
+####
+
+
+<h4>Summary</h4>
+<p>
+The analysis of overrepresented sequences will spot an increase in
+any exactly duplicated sequences, but there are a different subset
+of problems where it will not work.
+</p>
+<ul>
+<li>If you have very long sequences with poor sequence quality then
+random sequencing errors will dramatically reduce the counts for
+exactly duplicated sequences.
+</li>
+<li>If you have a partial sequence which is appearing at a variety
+of places within your sequence then this won't be seen either by the
+per base content plot or the duplicate sequence analysis.
+</li>
+</ul> 
+<p>
+This module counts the enrichment of every 5-mer within the sequence
+library.  It calculates an expected level at which this k-mer should
+have been seen based on the base content of the library as a whole and
+then uses the actual count to calculate an observed/expected ratio for
+that k-mer.  In addition to reporting a list of hits it will draw a
+graph for the top 6 hits to show the pattern of enrichment of that
+Kmer across the length of your reads.  This will show if you have a
+general enrichment, or if there is a pattern of bias at different
+points over your read length.
+</p>
+<p><img alt="Kmer profiles" src="kmer_profiles.png"></p>
+<p>
+Any k-mer showing more than a 3 fold overall enrichment or a 5 fold
+enrichment at any given base position will be reported by this module.
+</p>
+<p>
+To allow this module to run in a reasonable time only 20% of the whole
+library is analysed and the results are extrapolated to the rest of
+the library.
+</p>
+
+<h4>Warning</h4>
+<p>
+This module will issue a warning if any k-mer is enriched more than 3
+fold overall, or more than 5 fold at any individual position.
+</p>
+
+<h4>Failure</h4>
+<p>
+This module will issue a error if any k-mer is enriched more than 10
+fold at any individual base position.
+</p>

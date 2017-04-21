@@ -1,0 +1,42 @@
+<script type="text/javascript">
+  $(function(){
+      $("#factor_selected_ids").multiselect();
+      });
+</script>
+
+
+<%= form_tag({:controller => "/experiments", :action => "whole_tcr_analysis"}, :method => "post",:remote=> true)   do %>
+
+  <div class="form-inputs">
+     <%= label_tag  :s_type, "Select type" %>
+     <%= select_tag :s_type, options_for_select(@s_type[:collect], @s_type[:selected]),:style=>"width:90%;" %>
+     <br />
+     <%= label_tag  :s_method, "Samples similarity Measure" %>
+     <%= select_tag :s_method, options_for_select(@s_method[:collect], @s_method[:selected]),:style=>"width:90%;" %>
+     <br />
+    <%= label_tag  :factor_ids, "Select factors to combine samples(leave blank to not combine)" %>
+    <%= select_tag :factor_ids, options_for_select(@factor_collection),{:multiple=>true, :id=>"factor_selected_ids", :style=>"width: 580px;height:145px"}  %>
+    <br />
+    <table>
+      <tr><td colspan=2>
+         </td><tr>
+          <tr><td style="width:300px" valign="top">
+            <%= label_tag  :sim, "Cluster Similarity Metric" %>
+            <%= select_tag :sim, options_for_select([["Euclidean distance",1],["Manhattan distance",2],["Pearson correlation",3],["spearman correlation",4],["kendall correlation",5]],1)  %>
+          </td>
+          <td>
+            <%= label_tag  :cluster, "Cluster method" %>
+            <%= select_tag :cluster, options_for_select([["ward",1],["single",2],["complete",3],["average",4],["mcquitty",5],["median",6],["centroid",7]],3)  %>
+          </td>
+        </tr>
+     </table>
+ 
+ 
+ </div>
+
+  <%= hidden_field_tag :id,@experiment.id %>
+  <%= hidden_field_tag :task,@task %>
+  <div class="form-actions"  style= "display:none;">
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>

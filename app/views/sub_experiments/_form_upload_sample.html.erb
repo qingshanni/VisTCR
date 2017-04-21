@@ -1,0 +1,18 @@
+<%= simple_form_for(@sub_experiment,:url => {:controller => "sub_experiments", :action => "upload_sample_file"}, :html => { :multipart => true }, :method => :post, :remote => true) do |f| %>
+
+  <div class="form-inputs">
+    <%= hidden_field_tag :id,  @sub_experiment.id %>
+    <%= f.input :sample_name,:label => 'Sample Name' , :input_html => { :style=>"width: 98%; ", :disabled=>"disabled"}%>
+    
+    <div class="control-group string optional sub_experiment_description">
+      <label class="string optional control-label" for="sub_experiment_file">Upload file</label>
+      <div class="controls">
+        <%= f.file_field :file %>
+      </div>
+    </div>      
+  </div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= f.button :submit, :id => "submit_create" %>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+
+<% tab_head = {"name" => ["Raw data","Blank","Blank","Blank","Blank"], "href"=>["/experiments/1/analysis",'/','/','/','/'],"title"=>['Raw data','title','title','title','title']} %>
+<div id="tabContainer" style="width: 100%; left: 0px;">
+  <div class="spacing"></div>
+<%    n = tab_head["name"].length   %>
+<%    n.times do |i|                          %>
+   <div class="singleTabContainer">
+    <div class="<%= i==tab_i ? "selectedTab" : "tab"  %>" title="<%= tab_head["name"][i] %>" > <a href= "<%= tab_head["href"][i] %>"><%= tab_head["title"][i] %></a></div>
+  </div>
+  <% end %>   
+</div>
+

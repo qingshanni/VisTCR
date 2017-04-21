@@ -1,0 +1,22 @@
+$("#dialog-form").html("<%=j render :partial => 'form' %>");
+
+   $( "#dialog-form" ).dialog({
+      autoOpen: true,
+      height: 500,
+      width: 750,
+      modal: true,
+      title: "Edit Channel",
+      buttons: {
+        "Edit Channel": function() {
+            $("#submit_create").trigger("click");
+            $( this ).dialog( "close" );
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      close: function() {
+        ;
+      }
+    });
+

@@ -1,0 +1,13 @@
+$.unblockUI(); 
+$.ajax({
+  url: "/experiments/experiment_detail_design?id=<%= @experiment.id %>",
+  async: false,
+  type: "get",
+  success: function(msg){  
+    $('#center_display').html( msg );
+  }
+});
+alert('Re-run MiTCR for samples successful!');
+
+
+

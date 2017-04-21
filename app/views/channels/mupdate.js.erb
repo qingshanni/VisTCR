@@ -1,0 +1,29 @@
+   var ids = $("#grid_sub_experiment").getGridParam( "selrow" );
+   show_board(ids);
+   $('#grid_channel').jqGrid().trigger('reloadGrid'); 
+
+   var dataRow = {
+    <%  if @par[:sample] %>
+       sample: "<%= @par[:sample]%>",
+    <% end %> 
+    <%  if @par[:detector] %>
+       detector: "<%= @par[:detector]%>",
+    <% end %> 
+    <%  if @par[:ct_value] %>
+       ct_value: <%= @par[:ct_value]%>,
+    <% end %> 
+    <%  if @par[:task] %>
+       task: "<%= @par[:task]%>",
+    <% end %> 
+    <%  if @par[:confidence] %>
+       confidence: <%= @par[:confidence]%>
+    <% end %> 
+   }
+
+
+   <% @ids.each do |id|%>
+     $("#grid_channel_selected").setRowData("<%= id %>" , dataRow); 
+   <% end %>
+
+  
+          

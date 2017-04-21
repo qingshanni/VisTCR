@@ -1,0 +1,244 @@
+
+<style>
+
+path { 
+       fill:none; 
+       stroke:black; 
+       stroke-width:1
+      }
+
+.slider_scale {
+   float: left;
+   clear: left;
+   width: 300px;
+   margin: 15px;
+ }
+
+  
+</style>
+<div  style="margin:20px 20px 20px 20px;">
+
+   <table ><tr>
+     <td> Min: </td>
+      <td > <input id="select_color_min" name="select_color_min" type="text" value="#c0c0c0"  /></td>
+      <td> <input  id = "input_color_min"  class="color-input"  type="text"  style="margin-bottom: 0px; height:10px ;  font-size: 12px;"></td>
+      <td style="width:40px"></td>
+      <td> Middle: </td>
+      <td > <input id ="select_color_middle" name="select_color_middle" type="text" value="#333399"  /></td>
+      <td> <input  id = "input_color_middle" class="color-input"  type="text"   style="margin-bottom: 0px; height:10px;  font-size: 12px;" ></td>
+      <td style="width:40px"></td>
+      <td> Max: </td>
+      <td > <input id ="select_color_max" name="select_color_max" type="text" value="#ff0000"  /></td>
+      <td> <input  id = "input_color_max" class="color-input"   type="text"   style="margin-bottom: 0px; height:10px;  font-size: 12px;"></td>
+      <td style="width:40px"></td>
+      <td> <button id = "button_set_cluster" class="btn btn-mini" >Set</button></td> 
+  </tr></table>
+      
+
+
+<div>
+  <table><tr><td>
+     Width:       
+        </td><td>
+ <div id="col_scale" class="slider_scale"> </div>
+ </td><td>
+     Height:</td><td> <div id="row_scale" class="slider_scale"> </div>
+</td></tr></table>
+</div>
+
+
+
+<button id="savePng" class="btn pull-right">SaveToPng</button>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng').unbind('click').click(function() {
+    var canvas = $('#chart_1 svg')[0];
+    saveSvgAsPng(canvas, 'TCR.png');
+    });  
+</script>
+<div id="chart_1">  </div>
+<script>
+  $(function() {
+
+    $('#select_color_min').colorPicker();
+    $('#select_color_middle').colorPicker();
+    $('#select_color_max').colorPicker();
+    
+    d3.json("<%= raw @url_fig_data %>", function(data) {
+      
+//slider
+   $( "#row_scale" ).slider({
+     orientation: "horizontal",
+     max: 200,
+     min: 1,
+     value: 60,
+     change: refresh_cluster
+   });
+   $( "#col_scale" ).slider({
+     orientation: "horizontal",
+     max: 200,
+     min: 1,
+     value: 60,
+     change: refresh_cluster
+   });
+
+
+// draw matrix                       
+      var mx    = data.mx; 
+      var nrow  = data.row_labels.length;
+      var ncol  = data.col_labels.length; 
+
+     var row_height = $( "#row_scale" ).slider( "value" );
+     var col_width  = $( "#col_scale" ).slider( "value" );
+
+      var margin = {top: 10, right: 300, bottom: 100, left: 120},
+          width = ncol * col_width,
+          height = nrow * row_height;
+      var   xscale  = d3.scale.ordinal().domain(d3.range(ncol)).rangeBands([0, width]);
+      var   yscale  = d3.scale.ordinal().domain(d3.range(nrow)).rangeBands([0, height]); 
+      var   vmax    = d3.max(data.mx, function(d) { return d3.max(d);});
+      var   vmin    = d3.min(data.mx, function(d) { return d3.min(d);});
+      var   cmin    = $("#select_color_min").val();
+      var   cmiddle = $("#select_color_middle").val();
+      var   cmax    = $("#select_color_max").val();
+      var   color   = d3.scale.linear().domain([vmin,(vmin+vmax)/2,vmax]).range([cmin,cmiddle,cmax]);
+  // set control
+    $("#input_color_min").val( vmin);
+    $("#input_color_middle").val((vmin+vmax)/2);
+    $("#input_color_max").val(vmax);
+    $("#text_value_scale").html("<div>Min: " + vmin + "</div><div>Max: " + vmax + "</div>");
+
+
+
+     var matrix = [];
+     for (var i=0; i< nrow; i++){
+       for (var j=0; j<ncol; j++ ){
+               var idx = i*ncol+j;
+               var obj = new Object();
+               obj.v= mx[i][j];
+               obj.i=i;
+               obj.j=j;
+               obj.xlabel=data.row_labels[i];
+               obj.ylabel=data.col_labels[j];
+               matrix[idx] = obj; 
+             };
+           }; 
+
+      var svgall = d3.select("#chart_1").append("svg")
+               .style("width",  function(d) { return (margin.left + margin.right + width)+ "px";})
+               .style("height", function(d) { return (height + margin.top + margin.bottom)+ "px";});
+      var svg = svgall.append("g")
+               .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+  var row = svg.selectAll(".row")
+      .data(data.row_labels)
+    .enter().append("g")
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + yscale(i) + ")"; })
+
+  row.append("text")
+      .attr("x", -10)
+      .attr("y", yscale.rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "end")
+      .text(function(d) { return d; })
+ 
+  var col = svg.selectAll(".column")
+      .data(data.col_labels)
+    .enter().append("g")
+      .attr("class", "column")
+      .attr("transform", function(d, i) { return "translate(" + xscale(i) + ", " + (height+10) + ")rotate(-90)"; })
+
+  col.append("text")
+      .attr("x", 6 )
+      .attr("y", xscale.rangeBand()/2  )
+      .attr("dy", ".32em")
+      .attr("text-anchor", "end")
+      .text(function(d) { return d; })
+ 
+  var data_point = svg.selectAll(".cell")
+      .data(matrix)
+      .enter()
+      .append("rect")
+        .attr("class", "cell")
+        .attr("x", function(d) { return xscale(d.j);})
+        .attr("y", function(d) { return yscale(d.i);})
+        .attr("width", xscale.rangeBand() )
+        .attr("height", yscale.rangeBand() )
+        .attr("title",function(d){return  "Group: " + d.ylabel + "\nGroup: " + d.xlabel + "\nSimilarity: " + numeric_format_e(d.v,2)})
+        .style("fill", function(d) { return color(d.v);});
+
+
+
+   function refresh_cluster(){
+     var row_height = $( "#row_scale" ).slider( "value" );
+     var col_width  = $( "#col_scale" ).slider( "value" );
+     width   = ncol * col_width;
+     height  = nrow * row_height;
+
+       xscale.rangeBands([0, width]);
+       yscale.rangeBands([0, height]); 
+      
+     height_row = height;
+     height_col= width;
+     svgall.style("width",  function(d) { return (margin.left + margin.right + width)+ "px";})
+          .style("height", function(d) { return (height + margin.top + margin.bottom)+ "px";});
+     row.transition().duration(1000).attr("transform", function(d, i) { return "translate(0," + yscale(i) + ")"; });
+     col.transition().duration(1000).attr("transform", function(d, i) { return "translate(" + xscale(i) + ", " + (height+10) + ")rotate(-90)"; });
+     data_point.transition().duration(1000).attr("x", function(d) { return xscale(d.j);})
+        .attr("y", function(d) { return yscale(d.i);})
+        .attr("width", xscale.rangeBand() )
+        .attr("height", yscale.rangeBand() );
+  
+   }
+
+  $('#select_color_min').change(function(){
+     update_matrix_color();
+  });
+  $('#select_color_middle').change(function(){
+     update_matrix_color();
+  });
+  $('#select_color_max').change(function(){
+     update_matrix_color();
+  });
+  $('#button_set_cluster').click(function(){
+     update_matrix_color();
+  });
+ 
+    function update_matrix_color() {
+     var cmin    = $("#select_color_min").val();
+     var cmiddle = $("#select_color_middle").val();
+     var cmax    = $("#select_color_max").val();
+     var vmin    = parseFloat($("#input_color_min").val());
+     var vmiddle = parseFloat($("#input_color_middle").val());
+     var vmax    = parseFloat($("#input_color_max").val());
+     var color   = d3.scale.linear().domain([vmin,vmiddle,vmax]).range([cmin,cmiddle,cmax]);
+     if(eval(vmin)<= eval(vmiddle) && eval(vmiddle) <= eval(vmax)){
+         data_point.transition().duration(1000)
+            .style("fill", function(d) { return color(d.v); });
+     }
+     else
+     { alert("Input scale wrong !")}
+ 
+   }; 
+
+function numeric_format_e(d,n){
+  if(d==null){ return "NULL"}
+  t = Math.abs(d);
+  if(t>10 | t<0.01){
+    return d.toExponential(n);
+  }else{
+    return d.toPrecision(n+1);
+ }
+}
+
+
+  
+});
+
+});
+
+
+
+
+</script>

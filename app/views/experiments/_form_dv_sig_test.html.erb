@@ -1,0 +1,52 @@
+
+<script type="text/javascript">
+  $(function(){
+      $("#factor_selected_ids").multiselect();
+      $("#q_value").hide();
+      $("#s_method").change(function(){
+        if($("#s_method").val()=='renyi'){
+          $("#s_method").width("470px")
+          $("#q_value").show();
+        }else{
+          $("#q_value").hide();
+          $("#s_method").width("550px")
+        }
+        })
+      });
+</script>
+
+
+
+<%= form_tag({:controller => "/experiments", :action => "whole_tcr_analysis"}, :method => "post",:remote=> true)   do %>
+  <div class="form-inputs">
+    <%= label_tag  :s_type, "Data type" %>
+    <%= select_tag :s_type, options_for_select(@s_type[:collect], @s_type[:selected]),:style=>"width:564px;" %>
+    <table >
+      <tr>
+        <td> 
+          <%= label_tag  :s_method, "Mehtod" %>
+          <%= select_tag :s_method, options_for_select(@s_method[:collect], @s_method[:selected]),:style=>"width:564px" %>
+        </td> 
+        <td>
+          <div id= "q_value">
+            <%= label_tag  :q_value, "q value" %>
+            <input    class="color-input"  type="text" name="q_value" value= 2 >
+          </div>
+      </td> 
+    </tr>
+  </table>
+    <%= label_tag  :factor, "Factor" %>
+     <%= select_tag :factor, options_for_select(@factor[:collect], @factor[:selected]),:style=>"width:564px;" %>
+     <br />
+
+    <br />
+    <%= hidden_field_tag :id, @experiment.id %>
+    <%= hidden_field_tag :task,@task %>
+  </div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= select_tag :factor_ids, options_for_select([["sample name","sample_name"]],["sample_name"]),{:multiple=>true}  %>
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>
+

@@ -1,0 +1,37 @@
+<div class="nav-collapse collapse">
+  <ul class="nav">
+    <li id='nav_seq_data' class="">
+    <%= link_to "Sequencing Data", projects_path %>
+   </li>
+    <li id='nav_tcr' class="">
+    <%= link_to "Data Analysis", experiments_path%>  
+    </li>
+  </ul>
+</div>
+
+ <span class="nav pull-right" >
+  <% if user_signed_in? %>
+    <li>
+    <%= link_to 'Logout', destroy_user_session_path, :method=>'delete' %>
+    </li>
+  <% else %>
+    <li>
+    <%= link_to 'Login', new_user_session_path %>
+    </li>
+  <% end %>
+  <% if user_signed_in? %>
+    <li>
+    <%= link_to 'Edit account', edit_user_registration_path %>
+    </li>
+    <% if current_user.has_role? :admin %>
+      <li>
+      <%= link_to 'Admin', users_path %>
+      </li>
+    <% end %>
+  <% else %>
+    <li>
+    <%= link_to 'Register', new_user_registration_path %>
+    </li>
+  <% end %>
+</span>
+

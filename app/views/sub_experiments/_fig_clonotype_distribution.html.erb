@@ -1,0 +1,49 @@
+<button id="savePng" class="btn pull-right">SavePng</button>
+<div id="chart1">
+  <svg style="height:500px">
+  </svg>
+</div>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng').unbind('click').click(function() {
+    var canvas = $('#chart1 svg')[0];
+    saveSvgAsPng(canvas, 'TCR.png');
+    });  
+</script>
+
+<script type="text/javascript">
+ /*These lines are all chart setup. Pick and choose which chart features you want to utilize. */
+   
+    d3.json("<%= raw @url %>", function (data) {
+    nv.addGraph(function() {
+    var chart = nv.models.lineChart()
+    .margin({left: 100}) //Adjust chart margins to give the x-axis some breathing room.
+    .x(function(d){return d[0]})
+    .y(function(d){return d[1]})
+    .useInteractiveGuideline(true) //We want nice looking tooltips and a guideline!
+    .transitionDuration(350) //how fast do you want the lines to transition?
+    .showLegend(true) //Show the legend, allowing users to turn on/off line series.
+    .showYAxis(true) //Show the y-axis
+    .showXAxis(true) //Show the x-axis
+    ;
+     
+    chart.xAxis //Chart x-axis settings
+    .axisLabel('Fraction of unique clones')
+    .tickFormat(d3.format('.02%'));
+     
+    chart.yAxis //Chart y-axis settings
+    .axisLabel('Cumulative Frequency')
+    .tickFormat(d3.format('.02%'));
+     
+    /* Done setting the chart up? Time to render it!*/
+     
+    d3.select('#chart1 svg') //Select the <svg> element you want to render the chart in.
+    .datum(data) //Populate the <svg> element with chart data...
+    .call(chart); //Finally, render the chart!
+     
+    //Update the chart when window resizes.
+    nv.utils.windowResize(function() { chart.update() });
+    return chart;
+    });
+    });
+  </script>

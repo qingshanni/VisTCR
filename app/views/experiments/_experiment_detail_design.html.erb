@@ -1,0 +1,58 @@
+<script>
+    $(function() {
+
+      $("div.ui-layout-center").resize(function(){
+          $("#grid_exp_design").setGridWidth($("#grid_exp_design_width").width()-2);
+       });
+
+
+    $("#grid_exp_design").jqGrid({ 
+      height:200,
+      url:'/experiments/jqgrid_exp_design_list.json?exp_id=' + "<%= @experiment.id %>", 
+      datatype: "json", 
+      colNames:['ID','Sample name' , 'Orginal Name','File ID'
+      <% @col_name.each do |name|  %>
+        ,'<%= name %>'
+      <% end  %>
+      ], 
+      colModel:[ {name:'id',index:'id', width:1, hidden:true}, 
+      {name:'sample_name',index:'sample_name'},
+      {name:'sample_name_org',index:'sample_name_org'},
+      {name:'description',index:'description'},
+      <% @factor_num.times do |i|  %>
+        {name:'factor<%= i+1  %>',index:'factor<%= i+1  %>'},
+      <% end  %>
+      ], 
+      rowNum:10000, 
+      sortname: 'id', 
+      sortorder: "asc", 
+      autowidth: true,
+      rownumbers: true,
+    }); 
+    $("#grid_exp_design").jqGrid('filterToolbar'); 
+    $("#grid_exp_design").setGridWidth($("#grid_exp_design_width").width()-2);
+  }); 
+</script>
+
+
+<div class="panel panel-default" id="grid_exp_design_width">
+  <div class="panel-heading">Project Description </div>
+  <div class="panel-body">
+    <table> 
+      <tr>
+        <td class="textbox-content-title"> Project Title:   </td><td> <%= @experiment.title  %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Project Description:   </td><td> <%= raw @experiment.description %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Clone Extraction:   </td><td> <%= raw @clone_method %> </td>
+      </tr><tr>
+        <td class="textbox-content-title"> Target species:   </td><td> <%= raw @target_sp %> </td>
+      </tr>
+    </table>
+    <br />
+  </div>
+</div>
+  <table id='grid_exp_design'> </table>
+  <div class= "pull-right"><a href="experiment/<%= @experiment.id %>/exp_design.csv"> download </a></div>
+<br>
+<br>

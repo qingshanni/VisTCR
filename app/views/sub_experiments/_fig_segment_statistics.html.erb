@@ -1,0 +1,50 @@
+<button id="savePng" class="btn pull-right">SavePng</button>
+<div id="chart1">
+  <svg style="height:500px">
+  </svg>
+</div>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng').unbind('click').click(function() {
+    var canvas = $('#chart1 svg')[0];
+    saveSvgAsPng(canvas, '<%= TCR.png');
+    });  
+</script>
+
+<script type="text/javascript">
+    d3.json("<%= raw @url %>",function (data) {
+      nv.addGraph(function() {
+          var chart = nv.models.multiBarChart()
+          .x(function(d) { return d.x }) //Specify the data accessors.
+          .y(function(d) { return d.y })
+          .transitionDuration(350)
+          .reduceXTicks(false) //If 'false', every single x-axis tick label will be rendered.
+          .rotateLabels(-90) //Angle to rotate x-axis labels.
+          .showControls(false) //Allow user to switch between 'Grouped' and 'Stacked' mode.
+          .groupSpacing(0.1) //Distance between each group of bars.
+          ;
+          
+           //Configure how the tooltip looks.
+          chart.tooltipContent(function(key,x,y) {
+            return '<h4>' + y + '</h4>';
+            ;'</h>'})
+           
+          chart.xAxis
+          .axisLabel("<%= @label%>")
+          .tickFormat(function(d){return d;});
+           
+          chart.yAxis
+          .axisLabel("Frequency")
+          .tickFormat(d3.format(',d'));
+           
+          d3.select('#chart1 svg')
+          .datum(data)
+          .call(chart);
+           
+          nv.utils.windowResize(chart.update);
+           
+          return chart;
+      });
+       });
+
+</script>

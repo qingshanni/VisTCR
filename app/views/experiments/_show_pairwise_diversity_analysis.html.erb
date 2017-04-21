@@ -1,0 +1,53 @@
+<div class="textbox">
+  <div class = "textbox-title">
+    <div> Result 
+    </div>  
+  </div>
+  <div class="textbox-content">
+    <div >
+      <table class="table table-hover table-condensed">
+        <tr>
+          <td><b> t-value</b></td><td> <%= @data[:t] %> </td>
+          </tr><tr>
+          <td> <b> 95 percent confidence interval</b></td><td> <%= @data[:conf]%></td>
+          </tr><tr>
+          <td> <b> p-value</b></td><td> <%= @data[:p] %> </td>
+          </tr><tr>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+<% @data[:desc].each_with_index do |dd,i| %>
+<div class="textbox">
+  <div class = "textbox-title">
+    <div> Group <%= i+1 %> 
+    </div>  
+  </div>
+  <div class="textbox-content">
+    <div>
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <td> Samples </td>
+            <td> Diversity </td>
+          </tr>
+        </thead>
+        <tbody>
+          <% dd.each do |d| %>
+            <tr>
+              <% d.each do |t| %>
+                <td> <%= t %> </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% end %>
+

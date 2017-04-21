@@ -1,0 +1,8 @@
+<%if @sub_experiment.sample_id>0 %>
+  $("#center_display").html("<%= j render :partial=> @center_content %>");
+  $("#east").html("<%= j render :partial=> @east_content %>");
+  $.unblockUI(); 
+<% else%>  
+  render :js=>"alert('There no seq data,Please upload it firstly!')"
+<% end %> 
+

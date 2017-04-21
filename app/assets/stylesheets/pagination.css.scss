@@ -1,0 +1,126 @@
+.digg_pagination {
+    background: none repeat scroll 0 0 white;
+    cursor: default;
+}
+.digg_pagination a, .digg_pagination span, .digg_pagination em {
+    display: block;
+    float: left;
+    margin-right: 1px;
+    padding: 0.2em 0.5em;
+}
+.digg_pagination .disabled {
+    border: 1px solid #DDDDDD;
+    color: #999999;
+}
+.digg_pagination .current {
+    background: none repeat scroll 0 0 #2E6AB1;
+    border: 1px solid #2E6AB1;
+    color: white;
+    font-style: normal;
+    font-weight: bold;
+}
+.digg_pagination a {
+    border: 1px solid #9AAFE5;
+    color: #105CB6;
+    text-decoration: none;
+}
+.digg_pagination a:hover, .digg_pagination a:focus {
+    border-color: #000033;
+    color: #000033;
+}
+.digg_pagination .page_info {
+    background: none repeat scroll 0 0 #2E6AB1;
+    color: white;
+    margin-bottom: 0.3em;
+    padding: 0.4em 0.6em;
+    text-align: center;
+    width: 22em;
+}
+.digg_pagination .page_info b {
+    background: none repeat scroll 0 0 #6AA6ED;
+    color: #000033;
+    padding: 0.1em 0.25em;
+}
+.digg_pagination:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+* html .digg_pagination {
+    height: 1%;
+}
+:first-child + html .digg_pagination {
+    overflow: hidden;
+}
+.apple_pagination {
+    background: none repeat scroll 0 0 #F1F1F1;
+    border: 1px solid #E5E5E5;
+    cursor: default;
+    padding: 1em;
+    text-align: center;
+}
+.apple_pagination a, .apple_pagination span {
+    padding: 0.2em 0.3em;
+}
+.apple_pagination .disabled {
+    color: #AAAAAA;
+}
+.apple_pagination .current {
+    background-color: #BEBEBE;
+    border-radius: 1em 1em 1em 1em;
+    display: inline-block;
+    font-style: normal;
+    font-weight: bold;
+    height: 1.4em;
+    line-height: 1.5;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    width: 1.4em;
+}
+.apple_pagination a {
+    color: black;
+    text-decoration: none;
+}
+.apple_pagination a:hover, .apple_pagination a:focus {
+    text-decoration: underline;
+}
+.flickr_pagination {
+    cursor: default;
+    padding: 0.3em;
+    text-align: center;
+}
+.flickr_pagination a, .flickr_pagination span, .flickr_pagination em {
+    padding: 0.2em 0.5em;
+}
+.flickr_pagination .disabled {
+    color: #AAAAAA;
+}
+.flickr_pagination .current {
+    color: #FF0084;
+    font-style: normal;
+    font-weight: bold;
+}
+.flickr_pagination a {
+    border: 1px solid #DDDDDD;
+    color: #0063DC;
+    text-decoration: none;
+}
+.flickr_pagination a:hover, .flickr_pagination a:focus {
+    background: none repeat scroll 0 0 #0063DC;
+    border-color: #003366;
+    color: white;
+}
+.flickr_pagination .page_info {
+    color: #AAAAAA;
+    padding-top: 0.8em;
+}
+.flickr_pagination .previous_page, .flickr_pagination .next_page {
+    border-width: 2px;
+}
+.flickr_pagination .previous_page {
+    margin-right: 1em;
+}
+.flickr_pagination .next_page {
+    margin-left: 1em;
+}

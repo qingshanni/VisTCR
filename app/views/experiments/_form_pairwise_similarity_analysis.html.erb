@@ -1,0 +1,305 @@
+
+<script type="text/javascript">
+$(function(){
+      
+  $('#table_group1').jqGrid({ 
+        datatype: "local",
+        height: 200,
+        width: 200,
+        pager: false,
+        loadui: "disable",
+        colNames:['id','ID', 'Sample Name'], 
+        colModel:[ 
+                  {name:'id',index:'id',hidden:true}, 
+                  {name:'ids',index:'ids', width:1,hidden:true}, 
+                  {name:'name',index:'name', width:300}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"Group 1: 0", 
+       }); 
+
+  $('#table_avalable').jqGrid({ 
+        datatype: "local",
+        height: 200,
+        width: 200,
+        pager: false,
+        loadui: "disable",
+        colNames:['id','ID', 'Sample Name'], 
+        colModel:[ 
+                  {name:'id',index:'id',hidden:true}, 
+                  {name:'ids',index:'ids', width:1,hidden:true}, 
+                  {name:'name',index:'name', width:300}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"Avalable Samples", 
+       }); 
+
+  $('#table_group2').jqGrid({ 
+        datatype: "local",
+        height: 200,
+        width: 200,
+        pager: false,
+        loadui: "disable",
+        colNames:['id','ID', 'Sample Name'], 
+        colModel:[ 
+                  {name:'id',index:'id',hidden:true}, 
+                  {name:'ids',index:'ids', width:1,hidden:true}, 
+                  {name:'name',index:'name', width:300}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"Group 2: 0", 
+       }); 
+
+  $('#table_s1').jqGrid({ 
+        datatype: "local",
+        height: 100,
+        width: 330,
+        pager: false,
+        loadui: "disable",
+        colNames:['ID','IDS 1', 'class 1','IDS 2',  'class 2'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:1,hidden:true}, 
+                  {name:'ids1',index:'ids1', width:1,hidden:true}, 
+                  {name:'name1',index:'name1'}, 
+                  {name:'ids2',index:'ids2', width:1,hidden:true}, 
+                  {name:'name2',index:'name2'}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"1: 0", 
+       }); 
+
+  $('#table_s2').jqGrid({ 
+        datatype: "local",
+        height: 100,
+        width: 330,
+        pager: false,
+        loadui: "disable",
+        colNames:['ID','IDS 1', 'class 1','IDS 2',  'class 2'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:1,hidden:true}, 
+                  {name:'ids1',index:'ids1', width:1,hidden:true}, 
+                  {name:'name1',index:'name1'}, 
+                  {name:'ids2',index:'ids2', width:1,hidden:true}, 
+                  {name:'name2',index:'name2'}, 
+                ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"2: 0", 
+       }); 
+
+
+  var sample_data = [
+     <% @samples.each_with_index do |d,i| %>
+       { id:"<%= d.id %>" ,ids:"<%= d.id %>" , name:"<%= d.sample_name %>"}, 
+    <% end %>
+    ];
+  for(var i=0;i < sample_data.length;i++){
+      $("#table_avalable").jqGrid('addRowData',i+1,sample_data[i]);
+  } 
+  $("#table_avalable").jqGrid('setCaption','Avalable Samples: '+ sample_data.length) 
+
+  $("#samples_remove_group1").click( function(){  move_samples($("#table_group1"),$("#table_avalable")); update_forms(); });
+  $("#samples_remove_group2").click( function(){  move_samples($("#table_group2"),$("#table_avalable")); update_forms(); });
+  $("#samples_add_to_group1").click( function(){  move_samples($("#table_avalable"),$("#table_group1")); update_forms(); });
+  $("#samples_add_to_group2").click( function(){  move_samples($("#table_avalable"),$("#table_group2")); update_forms(); });
+  $("#samples_add_to_s1").click( function(){  add_pair_samples($("#table_s1"));  });
+  $("#samples_add_to_s2").click( function(){  add_pair_samples($("#table_s2"));  });
+  $("#samples_remove_s1").click( function(){  remove_pair_samples($("#table_s1"));});
+  $("#samples_remove_s2").click( function(){  remove_pair_samples($("#table_s2"));});
+
+  function remove_pair_samples(tb){
+   var sel = tb.jqGrid('getGridParam','selarrrow');
+   if( sel.length < 1 ){
+    alert('Please select at least one sample !')
+    return ;
+      }
+   for(var i=sel.length-1;i>-1;i--){
+      tb.jqGrid('delRowData',sel[i]);
+    }
+    $('#table_group1').jqGrid('clearGridData');
+    $('#table_group2').jqGrid('clearGridData');
+    $('#table_avalable').jqGrid('clearGridData');
+    for(var i=0;i < sample_data.length;i++){
+      $("#table_avalable").jqGrid('addRowData',i+1,sample_data[i]);
+    } 
+
+    $("#table_avalable").jqGrid('setCaption','Available Samples: '+ sample_data.length); 
+    $("#table_group1").jqGrid('setCaption','Group1: 0'); 
+    $("#table_group2").jqGrid('setCaption','Group2: 0'); 
+
+    var data = $("#table_s1").jqGrid('getGridParam','data');
+    $("#table_s1").jqGrid('setCaption','1: '+ data.length); 
+    data = $("#table_s2").jqGrid('getGridParam','data');
+    $("#table_s2").jqGrid('setCaption','2: '+ data.length); 
+ 
+  }
+
+  function add_pair_samples(tb){
+    var data1 = $("#table_group1").jqGrid('getGridParam','data');
+    var data2 = $("#table_group2").jqGrid('getGridParam','data');
+    if(data1.length < 1 || data2.length < 1){
+      alert("At least one sample is required for each group");
+      return;
+    }
+
+    var str1  = data1[0].name; 
+    var ids1  = data1[0].ids; 
+    for(var i=1;i<data1.length;i++){
+      str1 +=  "," + data1[i].name ;
+      ids1 +=  "," + data1[i].ids ;
+    }
+    var str2  = data2[0].name; 
+    var ids2  = data2[0].ids; 
+    for(var i=1;i<data2.length;i++){
+      str2 +=  "," + data2[i].name ;
+      ids2 +=  "," + data2[i].ids ;
+    }
+
+    data = tb.jqGrid('getGridParam','data');
+    ret = {id: data.length,ids1: ids1,name1:str1,ids2:ids2, name2:str2};
+    tb.jqGrid('addRowData', data.length,ret);
+    $('#table_group1').jqGrid('clearGridData');
+    $('#table_group2').jqGrid('clearGridData');
+    $('#table_avalable').jqGrid('clearGridData');
+    for(var i=0;i < sample_data.length;i++){
+      $("#table_avalable").jqGrid('addRowData',i+1,sample_data[i]);
+    } 
+    data = $('#table_s1').jqGrid('getGridParam','data');
+    if(data.length > 0){
+      $('#table_s1').jqGrid('setCaption','1: '+ data.length); 
+      var str = data[0].ids1 + ":" + data[0].ids2; 
+      for(var i=1;i < data.length;i++){
+        str +=  ";" + data[i].ids1 + ":" + data[i].ids2; 
+      }
+      $("#id_s1_selected").val(str);
+    }
+
+    data = $('#table_s2').jqGrid('getGridParam','data');
+    if(data.length > 0){
+      $('#table_s2').jqGrid('setCaption','2: '+ data.length); 
+      var str = data[0].ids1 + ":" + data[0].ids2; 
+      for(var i=1;i < data.length;i++){
+        str += ";" + data[i].ids1 + ":" + data[i].ids2; 
+      }
+      $("#id_s2_selected").val(str);
+    }
+
+
+    data = $("#table_avalable").jqGrid('getGridParam','data');
+    $("#table_avalable").jqGrid('setCaption','Available Samples: '+ data.length); 
+    $("#table_group1").jqGrid('setCaption','Group1: 0'); 
+    $("#table_group2").jqGrid('setCaption','Group2: 0'); 
+ 
+  }
+
+  function move_samples(from,to){
+   var sel = from.jqGrid('getGridParam','selarrrow');
+   if( sel.length < 1 ){
+    alert('Please select at least one sample !')
+    return ;
+      }
+    for(var i=0;i<sel.length;i++){
+      var ret = from.jqGrid('getRowData',sel[i]);
+      to.jqGrid('addRowData',i+1,ret);
+     }
+    for(var i=sel.length-1;i>-1;i--){
+      from.jqGrid('delRowData',sel[i]);
+    }
+
+  }
+
+  function update_forms(){
+    var data = $("#table_group1").jqGrid('getGridParam','data');
+    $("#table_group1").jqGrid('setCaption','Group1: '+ data.length) 
+    data = $("#table_group2").jqGrid('getGridParam','data');
+    $("#table_group2").jqGrid('setCaption','Group 2: '+ data.length) 
+    data = $("#table_avalable").jqGrid('getGridParam','data');
+    $("#table_avalable").jqGrid('setCaption','Available Samples: '+ data.length) 
+
+ }
+});
+</script>
+
+
+<%= form_tag({:controller => "/experiments", :action => "whole_tcr_analysis"}, :method => "post",:remote=> true)   do %>
+  <div class="form-inputs">
+    <table>
+      <tr>
+        <td>
+          <%= label_tag  :s_type, "Data type" %>
+          <%= select_tag :s_type, options_for_select(@s_type[:collect], @s_type[:selected]),:style=>"width:280px;" %>
+        </td> <td width="20px"></td>
+        <td>
+          <%= label_tag  :s_method, "Similarity mehtod" %>
+          <%= select_tag :s_method, options_for_select(@s_method[:collect], @s_method[:selected]),:style=>"width:280px;" %>
+        </td> 
+      </tr><tr> 
+        <td>
+          <%= label_tag  :t_method, "Test method" %>
+          <%= select_tag :t_method, options_for_select([['t Test (parametric)',0],['Wilcoxon Test (non-parametric)',1]], 1),:style=>"width:280px;" %>
+        </td><td width="20px"></td>
+        <td>
+          <%= label_tag  :paired, "Paired" %>
+          <%= select_tag :paired, options_for_select([['Yes',1],['No',0]], 0),:style=>"width:280px;" %>
+        </td>
+      </table>
+      <br />
+ 
+    Select samples:
+    <table> 
+      <tr> 
+        <td> <table id="table_group1"></table>  </td>
+        <td align="center">
+          <p> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_add_to_group1"><i class="icon-arrow-left"></i></a></p>
+          <p> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_remove_group1"><i class="icon-arrow-right"></i></a></p>
+        </td> 
+        <td> <table id="table_avalable"></table>   </td>
+        <td align="center">  
+          <p> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_add_to_group2"><i class="icon-arrow-right"></i></a></p>
+          <p> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_remove_group2"><i class="icon-arrow-left"></i></a></p>  </td>
+        <td> <table id="table_group2"></table>   </td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td align="center"> 
+          <a href="javascript:void(0)" class="btn btn-mini" id= "samples_add_to_s1"><i class="icon-arrow-down"></i></a>  
+          <a href="javascript:void(0)" class="btn btn-mini" id= "samples_remove_s1"><i class="icon-arrow-up"></i></a>  
+        </td>
+        <td align="center"> 
+          <a href="javascript:void(0)" class="btn btn-mini" id= "samples_remove_s2"><i class="icon-arrow-up"></i></a>  
+          <a href="javascript:void(0)" class="btn btn-mini" id= "samples_add_to_s2"><i class="icon-arrow-down"></i></a>  
+        </td>
+      </tr>
+      <tr> 
+        <td> <table id="table_s1"></table>  </td>
+        <td> <table id="table_s2"></table>   </td>
+      </tr>
+
+    </table>
+    <br />
+    <%= hidden_field_tag :s1, "",:id=> "id_s1_selected" %>
+    <%= hidden_field_tag :s2, "",:id=> "id_s2_selected" %>
+    <%= hidden_field_tag :id, @experiment.id %>
+    <%= hidden_field_tag :task,@task %>
+  </div>
+
+  <div class="form-actions"  style= "display:none;">
+    <%= submit_tag "submit", :id => "submit_create" %>
+  </div>
+<% end %>
+

@@ -1,0 +1,104 @@
+<style>
+  .background {
+    fill: #ccc;
+  }
+  text.active {
+    fill: red;
+  }
+</style>
+<div id = "chart_1"  style="border:1px solid #CCC;"> </div>
+<script  type="text/javascript" >
+
+//  d3.json("display_data_json.json", function(data) {
+  var data = { type: 384};
+  var matrix     = [], 
+      type       = data.type;
+  var nrow,ncol;  
+  var AZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      if (type == 384){
+           nrow = 16;
+           ncol = 24;
+      } 
+      if (type == 96){
+           nrow = 8;
+           ncol = 12;
+      } 
+      var margin = {top: 100, right: 100, bottom: 100, left: 120},
+          width = 600,
+          height = width *2 /3,
+          d1    = width / ncol *2,
+          d2    = height /nrow;
+
+      var xscale = d3.scale.ordinal().domain(d3.range(ncol)).rangeBands([0, width]),
+          yscale = d3.scale.ordinal().domain(d3.range(nrow)).rangeBands([0, height]); 
+
+     for (var i=0; i< nrow; i++){
+       for (var j=0; j<ncol; j++ ){
+               matrix[i*ncol+j] =  {x: xscale(j)+xscale.rangeBand()/2, y: yscale(i)+yscale.rangeBand()/2, z: AZ.charAt(i)  + (j+1) };
+             };
+           }; 
+
+      var svg = d3.select("#chart_1").append("svg")
+               .attr("width", margin.left + margin.right + width)
+               .attr("height", height + margin.top + margin.bottom)
+               .append("g")
+               .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+  svg.append("path")
+      .attr("class", "background")
+      .attr("d", "M" + (-d1) + " " + (-d2) + " L"+ (-d1)+ " " + (height + d2) + " L" + width + " " + (height + d2) +  " L" + (width + d1*2/3) + " " + (height+d2-d1/2) + " L" + (width + d1*2/3) + " " + (-d2+d1/2) +   " L" + width  + " " + (-d2));
+    
+
+  var row = svg.selectAll(".row")
+      .data(d3.range(nrow))
+    .enter().append("g")
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + yscale(i) + ")"; })
+
+  row.append("text")
+      .attr("x", -10)
+      .attr("y", yscale.rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "end")
+      .text(function(d, i) { return AZ.charAt(i); })
+ 
+  var col = svg.selectAll(".column")
+      .data(d3.range(ncol))
+    .enter().append("g")
+      .attr("class", "column")
+      .attr("transform", function(d, i) { return "translate(" + xscale(i) + ", 0)"; })
+
+  col.append("text")
+      .attr("x", xscale.rangeBand()/5 )
+      .attr("y", -10 )
+      .attr("dy", ".32em")
+      .attr("text-anchor", "center")
+      .text(function(d, i) { return (i+1) + ""; })
+ 
+  var g = svg.selectAll(".cell")
+      .data(matrix)
+      .enter().append("g");
+      
+      g.append("circle")
+        .attr("class", "cell")
+        .attr("cx", function(d) { return d.x;})
+        .attr("cy", function(d) { return d.y;})
+        .attr("r", xscale.rangeBand()/2.2 )
+        .attr("title",function(d){return d.z;})
+        .style("fill", function(d) { return "grey";})
+        .on("mouseover", cellmouseover)
+        .on("mouseout", cellmouseout);
+ 
+  function cellmouseover(p) {
+   
+  }
+
+  function cellmouseout() {
+  }
+
+//});
+
+</script>
+</body>
+

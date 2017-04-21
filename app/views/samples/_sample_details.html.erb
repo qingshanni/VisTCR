@@ -1,0 +1,63 @@
+<script type="text/javascript" language="javascript" charset="utf-8">
+      //********************************************
+      function sample_qc_analysis(item){
+       $.ajax({
+      url: "/samples/qc_analysis?id=<%= @sample.id %>"+ "&item=" + item,
+           async: false,
+           type: "get"
+            });
+      }
+      function download_sample_data(id){
+        document.location.href = "/samples/download_sample_data?id=" + id; 
+      }
+
+      function download_ref_file(id){
+        document.location.href = "/samples/download_ref_file?id=" + id; 
+      }
+</script>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Sample Details</div>
+  <div class="panel-body">
+    <table> 
+      <tr>
+        <td class="textbox-content-title"  >Title:</td>
+        <td><%= @sample.title  if @sample.title %></td>
+      </tr><tr>
+        <td class="textbox-content-title" >ID:</td>
+        <td><%= @sample.sid if @sample.sid %></td>
+      </tr>  <tr>
+        <td class="textbox-content-title" >Description:</td>
+        <td><%= @sample.description.gsub(/\n/,"<br/>").html_safe if @sample.description %></td>
+      </tr><tr>
+        <td class="textbox-content-title" >Created at:</td>
+        <td><%= @sample.created_at.strftime("%F %T") if @sample.created_at %></td>
+      </tr><tr>
+        <td class="textbox-content-title" >Last update:</td>
+        <td><%= @sample.updated_at.strftime("%F %T") if @sample.updated_at %></td>
+      </tr><tr>
+        <td class="textbox-content-title" >Orignal file name:</td>
+        <td><%= @sample.org_file_name if @sample.org_file_name %></td>
+      </tr><tr>
+        <td class="textbox-content-title" >FastQ file:</td>
+        <td> <a href="javascript:void(0)" onclick="download_sample_data(<%= @sample.id %>);return false"> <%= @sample.title.gsub(/\s/,'_') + '.fastq' %> </a> </td>
+      </tr><tr>
+        <td class="textbox-content-title" >Reads number:</td>
+        <td> <%= @seq_num %> </td>
+      </tr>
+    <% if @sample.use_ref == 1 %>
+        <tr> <td class="textbox-content-title" >Parameter file:</td>
+        <td> <a href="javascript:void(0)" onclick="download_ref_file(<%= @sample.id %>);return false"> <%= @sample.title.gsub(/\s/,'_') + '.txt'%> </a> </td><td class="textbox-content-title" ></td> <td></td></tr>
+    <% end %>
+      <tr><td colspan =2>
+          <div class="btn-group">
+            <button class="btn btn-mini" onclick= "sample_qc_analysis(3)">Sequencing Qualify</button>
+            <button class="btn btn-mini" onclick= "sample_qc_analysis(4)">Base Sequence Content</button>
+            <button class="btn btn-mini" onclick= "sample_qc_analysis(5)">GC base Sequence Content</button>
+            <button class="btn btn-mini" onclick= "sample_qc_analysis(8)">Sequence Length Distribution</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+    </div>
+</div>

@@ -1,0 +1,132 @@
+
+<script type="text/javascript">
+$(function(){
+      
+  $('#table_control').jqGrid({ 
+        datatype: "local",
+        height: 200,
+        width: 200,
+        pager: false,
+        loadui: "disable",
+        colNames:['ID','ID Org', 'Sample Name'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:1,hidden:true}, 
+                  {name:'id_org',index:'id_org', width:1,hidden:true}, 
+                  {name:'name',index:'name'}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"Group one: 0", 
+       }); 
+
+  $('#table_avalable').jqGrid({ 
+        datatype: "local",
+        height: 200,
+        width: 200,
+        pager: false,
+        loadui: "disable",
+        colNames:['ID','ID Org', 'Sample Name'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:1,hidden:true}, 
+                  {name:'id_org',index:'id_org', width:1,hidden:true}, 
+                  {name:'name',index:'name', width:300}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"Avalable Samples", 
+       }); 
+
+  $('#table_interest').jqGrid({ 
+        datatype: "local",
+        height: 200,
+        width: 200,
+        pager: false,
+        loadui: "disable",
+        colNames:['ID','ID Org', 'Sample Name'], 
+        colModel:[ 
+                  {name:'id',index:'id', width:1,hidden:true}, 
+                  {name:'id_org',index:'id_org', width:1,hidden:true}, 
+                  {name:'name',index:'name'}, 
+                 ], 
+       rowNum:10000, 
+       sortname: 'position', 
+       sortorder: "asc", 
+       multiselect: true,
+       caption:"Group two: 0", 
+       }); 
+
+  var sample_data = [
+     <% @samples.each do |d| %>
+       { id_org:"<%= d[0] %>" , name:"<%= d[1] %>"}, 
+    <% end %>
+    ];
+  for(var i=0;i <= sample_data.length;i++){
+      $("#table_avalable").jqGrid('addRowData',i+1,sample_data[i]);
+  } 
+  $("#table_avalable").jqGrid('setCaption','Available Samples: '+ sample_data.length) 
+
+  $("#samples_remove_control").click( function(){  move_samples($("#table_control"),$("#table_avalable")); update_forms(); });
+  $("#samples_remove_interest").click( function(){  move_samples($("#table_interest"),$("#table_avalable")); update_forms(); });
+  $("#samples_add_to_control").click( function(){  move_samples($("#table_avalable"),$("#table_control")); update_forms(); });
+  $("#samples_add_to_interest").click( function(){  move_samples($("#table_avalable"),$("#table_interest")); update_forms(); });
+});
+
+  function move_samples(from,to){
+   var sel = from.jqGrid('getGridParam','selarrrow');
+   if( sel.length < 1 ){
+    alert('Please select at least one sample !')
+    return ;
+      }
+    for(var i=0;i<sel.length;i++){
+      var ret = from.jqGrid('getRowData',sel[i]);
+      to.jqGrid('addRowData',i+1,ret);
+     }
+    for(var i=sel.length-1;i>-1;i--){
+      from.jqGrid('delRowData',sel[i]);
+    }
+  }
+
+  function update_forms(){
+    var data = $("#table_control").jqGrid('getGridParam','data');
+    $("#table_control").jqGrid('setCaption','Group one: '+ data.length) 
+    var str  = ''
+    for(var i=0;i<data.length;i++){
+      str += data[i].id_org + ",";
+    }
+    $("#id_controls_selected").val(str);
+
+    data = $("#table_interest").jqGrid('getGridParam','data');
+    $("#table_interest").jqGrid('setCaption','Group two: '+ data.length) 
+    str  = ''
+    for(var i=0;i<data.length;i++){
+      str += data[i].id_org + ",";
+    }
+    $("#id_interest_selected").val(str);
+
+    data = $("#table_avalable").jqGrid('getGridParam','data');
+    $("#table_avalable").jqGrid('setCaption','Available Samples: '+ data.length) 
+
+ }
+</script>
+
+  <div class="form-inputs">
+    Select samples for each groups:
+    <table> 
+      <tr> 
+        <td> <table id="table_control"></table>  </td>
+        <td> <table id="table_avalable"></table>   </td>
+        <td> <table id="table_interest"></table>   </td>
+      </tr>
+      <tr> 
+        <td align="left"> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_remove_control"> <i class="icon-arrow-right"></i> </a>  </td>
+        <td align="center"> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_add_to_control"> <i class="icon-arrow-left"></i>  </a> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_add_to_interest"> <i class="icon-arrow-right"></i>  </a> </td>
+        <td align="right"> <a href="javascript:void(0)" class="btn btn-mini" id= "samples_remove_interest"> <i class="icon-arrow-left"></i> </a>  </td>
+      </tr>
+    </table>
+    <br />
+ </div>
+

@@ -1,0 +1,36 @@
+<div class="textbox">
+  <div class = "textbox-title">
+    <div>Data details
+    </div>  
+  </div>
+  <div class="textbox-content">
+    <div style="height:300px;overflow:auto">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <% @data_head.each do |s| %>
+              <th> <%= s %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @data_body.each do |dd| %>
+            <tr>
+              <td> <%= dd[0] %> </td>
+              <% dd[1..-1].each do |d| %>
+                <td> <%= format("%." + @decimal.to_s + "f",d.to_f) %> </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div>
+  <a class="btn btn-mini pull-right" href="<%= raw @url_download %>"> Download Data</a>
+</div>
+
+
+
+

@@ -1,0 +1,96 @@
+<br />
+<button id="savePng1" class="btn pull-right">SaveChart1</button>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng1').unbind('click').click(function() {
+    var canvas = $('#chart1 svg')[0];
+    saveSvgAsPng(canvas, 'chart1.png');
+    });  
+</script>
+<div id="chart1" class="fig-margin-top">
+  <svg style="height:500px">
+  </svg>
+</div>
+<button id="savePng2" class="btn pull-right">SaveChart2</button>
+<div id="chart2" class="fig-margin-top">
+  <svg style="height:500px">
+  </svg>
+</div>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng2').unbind('click').click(function() {
+    var canvas = $('#chart2 svg')[0];
+    saveSvgAsPng(canvas, 'chart2.png');
+    });  
+</script>
+<script type="text/javascript">
+   
+d3.json("<%= raw @url_fig_data %>", function (dataall) {
+
+ nv.addGraph(function() {
+	data = dataall.d1.data
+  xlabel = dataall.d1.xlabel
+  var chart = nv.models.lineChart()
+                .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
+                .useInteractiveGuideline(false)  //We want nice looking tooltips and a guideline!
+                .transitionDuration(350)  //how fast do you want the lines to transition?
+                .showLegend(false)       //Show the legend, allowing users to turn on/off line series.
+                .showYAxis(true)        //Show the y-axis
+                .showXAxis(true)        //Show the x-axis
+  ;
+
+  chart.xAxis     //Chart x-axis settings
+      .tickValues( xlabel)
+      .axisLabel('Group')
+      ;
+
+  chart.yAxis     //Chart y-axis settings
+      .axisLabel('Count')
+      ;
+
+  /* Done setting the chart up? Time to render it!*/
+
+  d3.select('#chart1 svg')    //Select the <svg> element you want to render the chart in.   
+      .datum(data)         //Populate the <svg> element with chart data...
+      .call(chart);          //Finally, render the chart!
+
+  //Update the chart when window resizes.
+  nv.utils.windowResize(function() { chart.update() });
+  return chart;
+});
+
+    
+nv.addGraph(function() {
+	data = dataall.d2.data
+  xlabel = dataall.d2.xlabel
+  var chart = nv.models.lineChart()
+                .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
+                .useInteractiveGuideline(false)  //We want nice looking tooltips and a guideline!
+                .transitionDuration(350)  //how fast do you want the lines to transition?
+                .showLegend(true)       //Show the legend, allowing users to turn on/off line series.
+                .showYAxis(true)        //Show the y-axis
+                .showXAxis(true)        //Show the x-axis
+  ;
+
+  chart.xAxis     //Chart x-axis settings
+      .tickValues( xlabel)
+      .axisLabel('Numner of groups')
+      ;
+
+  chart.yAxis     //Chart y-axis settings
+      .axisLabel('Number of shared clonotyoes')
+      ;
+
+  /* Done setting the chart up? Time to render it!*/
+
+  d3.select('#chart2 svg')    //Select the <svg> element you want to render the chart in.   
+      .datum(data)         //Populate the <svg> element with chart data...
+      .call(chart);          //Finally, render the chart!
+
+  //Update the chart when window resizes.
+  nv.utils.windowResize(function() { chart.update() });
+  return chart;
+});
+
+ });
+</script>

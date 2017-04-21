@@ -1,0 +1,49 @@
+<button id="savePng" class="btn pull-right">SavePng</button>
+<div id="chart1" class="fig-margin-top">
+  <svg style="height:500px">
+  </svg>
+</div>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$('#savePng').unbind('click').click(function() {
+    var canvas = $('#chart1 svg')[0];
+    saveSvgAsPng(canvas, 'TCR.png');
+    });  
+</script>
+
+
+<script type="text/javascript">
+  
+    d3.json("<%= raw @url_fig_data %>", function (data) {
+       nv.addGraph(function() {
+         var chart = nv.models.multiBarChart()
+         .margin({left: 100})
+         .x(function(d){return d[0];})
+         .y(function(d){return d[1];})
+         .transitionDuration(100)
+         .rotateLabels(0) //Angle to rotate x-axis labels.
+         .showControls(true) //Allow user to switch between 'Grouped' and 'Stacked' mode.
+         .groupSpacing(0.1) //Distance between each group of bars.
+         .stacked(true)
+         ;
+
+          chart.xAxis
+         .axisLabel('Groups');
+          
+         chart.yAxis
+         .axisLabel('Proportion')
+         ;
+          
+         
+         d3.select('#chart1 svg')
+         .datum(data)
+         .call(chart);
+          
+         nv.utils.windowResize(chart.update);
+          
+         return chart;
+       }); 
+       }); 
+
+
+     </script>

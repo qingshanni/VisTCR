@@ -1,0 +1,50 @@
+$("#dialog-form").html("<%=j render :partial => 'form' %>");
+
+    var name = $( "#sub_experiment_title" ),
+    allFields = $( [] ).add( name ),
+    tips = $( ".validateTips" );
+    function updateTips( t ) {
+      tips
+      .text( t )
+      .addClass( "ui-state-highlight" );
+      setTimeout(function() {
+        tips.removeClass( "ui-state-highlight", 1500 );
+      }, 500 );
+    }
+
+   function checkEmpty( o, n, min ) {
+      if (  o.val().length < min ) {
+        o.addClass( "ui-state-error" );
+        updateTips( "Length of " + n + " must be larger than " +
+        min + "." );
+        return false;
+        } else {
+        return true;
+      }
+    }
+  
+    $( "#dialog-form" ).dialog({
+      autoOpen: true,
+      height: 500,
+      width: 750,
+      modal: true,
+      title: "Create new Board", 
+      buttons: {
+        "Create Board": function() {
+          var bValid = true;
+          allFields.removeClass( "ui-state-error" );
+          bValid = bValid && checkEmpty( name, "Board title", 1 );
+         if ( bValid ) {
+            $("#submit_create").trigger("click");
+            $( this ).dialog( "close" );
+          }
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      close: function() {
+        allFields.val( "" ).removeClass( "ui-state-error" );
+      }
+    });
+
