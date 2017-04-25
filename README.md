@@ -78,7 +78,9 @@ Open a browser window and navigate to [http://localhost:3000](http://localhost:3
 
 ## Documentation
 
-Detailed documentation can be found at https://vistcr.readthedocs.io/
+Detailed usage can be found at our [user manual]()
+
+
 
 ## License
 
