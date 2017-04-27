@@ -55,7 +55,7 @@ Start Rserve
 
 	$R CMD Rserve
 
-**Be sure you are in the vistcr directionary,** and run the following commond.
+**Be sure you are in the vistcr directionary,** and run the following command.
 
 Install the required gems on your computer:
 
@@ -78,7 +78,7 @@ Open a browser window and navigate to [http://localhost:3000](http://localhost:3
 
 ## Documentation
 
-Detailed usage can be found at our [user manual]()
+Detailed usage instructions can be found in the user manual
 
 
 
