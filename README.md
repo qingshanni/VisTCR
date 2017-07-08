@@ -93,8 +93,7 @@ Open a browser window and navigate to [http://localhost:3000](http://localhost:3
 
 ## Documentation
 
-Detailed usage instructions can be found in the user manual
-
+Detailed usage instructions can be found in the [user manual](https://github.com/qingshanni/VisTCR/User_Manua.pdf)
 
 
 ## License
