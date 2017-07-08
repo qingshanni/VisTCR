@@ -1,4 +1,3 @@
-setwd('/home/tcr/tcr/tools/R')
 print(getwd())
 print("Load librarys ...")
 source('lib1_tcr.R')

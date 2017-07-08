@@ -17,7 +17,7 @@ Before running VisTCR, you will need to install
 - Rails (version 3.2, See the article [Installing Rails](http://railsapps.github.io/installing-rails.html) for detailed instructions and advice)
 - R (R packages [Rserve](https://cran.r-project.org/web/packages/Rserve/index.html),[Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html),[seqinr](https://cran.r-project.org/web/packages/seqinr/index.html),[ShortRead](https://bioconductor.org/packages/release/bioc/html/ShortRead.html),[stringdist](https://cran.r-project.org/web/packages/stringdist/index.html),[gplots](https://cran.r-project.org/web/packages/gplots/index.html),[ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html),[vegan](https://cran.r-project.org/web/packages/vegan/index.html) should be installed) 
 - Java (Version 1.8 or higher)
-- python
+- python (Version 2.7)
 - mysql
 
 ### Getting VisTCR
@@ -48,6 +48,21 @@ To use mysql database, you’ll need to modify the file **database.yml** to incl
   		timeout: 5000
 
 Replace * by your mysql password.
+
+To load required packages and codes when Rserve starts, RServe config file should be created. Create a file called Rserv.conf under /etc directory using vi or other text editor with the following contents:
+
+	workdir ***/tools/R
+	remote enable
+	fileio enable
+	interactive yes
+	port 6311
+	maxinbuf 262144
+	encoding utf8
+	control enable
+	source init_rserve.R
+	eval xx=1
+
+Replace *** by the full path of vistcr directionary,such as /home/vistcr.
 
 ### Run VisTCR
 
