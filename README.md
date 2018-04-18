@@ -76,7 +76,7 @@ Install the required gems on your computer:
 
 	$ bundle install
 
-Prepare the database and add the default user to the database by running the commands:
+Prepare the database and add the default user to the database:
 
 	$ rake db:create
 	$ rake db:migrate
