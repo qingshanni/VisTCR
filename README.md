@@ -98,7 +98,7 @@ Detailed usage instructions can be found in the [user manual](https://github.com
 
 ## License
 
-Copyright(c) <2016><QS Ni, JY Zhang, Y Wan, TMMU China, All Rights Reserved
+Copyright(c) <2020><QS Ni, JY Zhang, Y Wan, TMMU China, All Rights Reserved
 
 This program is free software and can be redistributed and/or modified under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the license, or (at your option) any later version.
 
